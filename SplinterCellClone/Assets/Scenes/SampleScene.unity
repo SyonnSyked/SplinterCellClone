@@ -255,6 +255,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 608961464}
+  - component: {fileID: 608961468}
   - component: {fileID: 608961467}
   - component: {fileID: 608961466}
   - component: {fileID: 608961465}
@@ -383,6 +384,23 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &608961468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 608961463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2e539315454a8440ba673424bdc4adf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraController
+  sensitivity: 3
+  lockVertMin: -90
+  lockVertMax: 90
+  invertY: 0
+  shakeDamping: 1
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -668,9 +686,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1791769243}
+  - component: {fileID: 1791769244}
   - component: {fileID: 1791769242}
   - component: {fileID: 1791769241}
   - component: {fileID: 1791769240}
+  - component: {fileID: 1791769245}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -774,6 +794,63 @@ Transform:
   - {fileID: 608961464}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1791769244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791769239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4542b327f42ac044091b25207b349846, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  characterController: {fileID: 1791769245}
+  cameraController: {fileID: 608961468}
+  moveSpeed: 5
+  moveSpeedFloor: 5
+  climbSpeed: 0
+  sprintModifier: 1.7
+  crouchModifier: 0
+  playerHC: {fileID: 0}
+  jumpVelocity: 15
+  jumpMax: 1
+  gravity: 32
+  state: {fileID: 0}
+  throwPoint: {fileID: 0}
+  throwForce: 20
+  pushVelTime: 0
+  DebugGunPref: {fileID: 0}
+  WeaponHoldPos: {fileID: 0}
+--- !u!143 &1791769245
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791769239}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2010768645
 GameObject:
   m_ObjectHideFlags: 0
