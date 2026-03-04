@@ -56,11 +56,7 @@ public class Movement : MonoBehaviour
         MyInput();
         SpeedControl();
 
-        if (grounded)
-            rb.linearDamping = groundDrag;
-        else
-            rb.linearDamping = 0;
-
+       
         MovePlayer();
     }
 
@@ -87,11 +83,16 @@ public class Movement : MonoBehaviour
 
         // on ground
         if (grounded)
+        {
+            rb.linearDamping = groundDrag;
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+        }
 
         // in air
-        else if (!grounded)
+        else if (!grounded) { 
+            rb.linearDamping = 0;
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+        }
     }
 
     private void SpeedControl()
