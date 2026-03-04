@@ -55,6 +55,8 @@ public class GameManager : MonoBehaviour
 
     int gameGoalCount;
 
+    public float timeScaleOrig = 1;
+
     public static GameManager instance;
     void toggleCrosshair(bool val)
     {
@@ -69,7 +71,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator HitmarkerRoutine()
     {
-        audioSource2D.PlayOneShot(hitmarkerSound2D, hitmarkerSoundVolume);
+        //audioSource2D.PlayOneShot(hitmarkerSound2D, hitmarkerSoundVolume);
         playerHitmarker.gameObject.SetActive(true);
         yield return new WaitForSeconds(0.05f);
         playerHitmarker.gameObject.SetActive(false);
@@ -164,7 +166,7 @@ public class GameManager : MonoBehaviour
     public void updateGameGoal(int amount)
     {
         gameGoalCount = amount;
-        updateScore();
+        //updateScore();
        
     }
 }
