@@ -2,17 +2,16 @@ using System.Collections;
 using System.ComponentModel.Design.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
-using HealthComponent;
-using PlayerState;
-using System.Numerics;
-using System.Threading.Tasks.Dataflow;
+using static HealthComponent;
+using static PlayerState;
 public class PlayerController : MonoBehaviour, iEntity
 {
     [SerializeField] LayerMask ignoreLayer;
 
     [SerializeField] CharacterController characterController;
-    [SerializeField] CameraController cameraController;
+    //[SerializeField] CameraController cameraController;
     [SerializeField] float moveSpeed = 5.0f;
+    [SerializeField] float moveSpeedFloor = 5.0f;
     [SerializeField] float climbSpeed;
     [SerializeField] float sprintModifier = 1.7f;
     [SerializeField] float crouchModifier;
@@ -26,12 +25,11 @@ public class PlayerController : MonoBehaviour, iEntity
     [SerializeField] int pushVelTime;
 
     [SerializeField] GameObject DebugGunPref;
-    Gun Gun;
+    //Gun Gun;
     [SerializeField] Transform WeaponHoldPos;
 
     int jumpCount = 0;
     int startingHP;
-    float startingMovespeed;
 
     float shootTimer;
 
@@ -39,6 +37,7 @@ public class PlayerController : MonoBehaviour, iEntity
     Vector3 playerVelocity;
     Vector3 pushVel;
 
+   
     void Start()
     {
 
@@ -55,24 +54,28 @@ public class PlayerController : MonoBehaviour, iEntity
         if (characterController.isGrounded)
         {
             jumpCount = 0;
-            playerVelocity = Vector3.Zero;
+            playerVelocity = Vector3.zero;
         }
 
-        pushVel = Vector3.Lerp(pushVel, Vector3.Zero, pushVelTime * Time.deltTime);
+        pushVel = Vector3.Lerp(pushVel, Vector3.zero, pushVelTime * Time.deltaTime);
 
         moveDir = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
         moveDir = Vector3.ClampMagnitude(moveDir, 1f);
-        characterController.Move(moveDir * moveSpeed * Time.deltTime);
+        characterController.Move(moveDir * moveSpeed * Time.deltaTime);
 
         if (Input.GetButton("Jump"))
         {
             Jump();
         }
 
-        characterController.Move((playerVelocity + pushVel) * Time.deltTime);
-        playerVelocity.y -= gravity * Time.deltTime;
+        characterController.Move((playerVelocity + pushVel) * Time.deltaTime);
+        playerVelocity.y -= gravity * Time.deltaTime;
     }
 
+    public bool isGrounded()
+    {
+        return characterController.isGrounded;
+    }
 
     void Jump()
     {
@@ -92,11 +95,21 @@ public class PlayerController : MonoBehaviour, iEntity
         }
         else if (Input.GetButtonUp("Sprint"))
         {
-            moveSpeed = startingMovespeed;
+            moveSpeed = moveSpeedFloor;
         }
     }
 
 
+    void Climb()
+    {
+        if (Input.GetButtonDown("Interact"))
+        {
+            state.isClimbing = true;
+        }
+    }
+
+
+    
 }
 
 
