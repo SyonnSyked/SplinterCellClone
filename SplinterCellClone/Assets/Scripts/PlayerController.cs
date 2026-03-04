@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour, iEntity
     [SerializeField] LayerMask ignoreLayer;
 
     [SerializeField] CharacterController characterController;
-    [SerializeField] CameraController cameraController;
+    //[SerializeField] CameraController cameraController;
     [SerializeField] float moveSpeed = 5.0f;
     [SerializeField] float moveSpeedFloor = 5.0f;
     [SerializeField] float climbSpeed;
@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour, iEntity
     Vector3 playerVelocity;
     Vector3 pushVel;
 
+   
     void Start()
     {
 
@@ -71,6 +72,10 @@ public class PlayerController : MonoBehaviour, iEntity
         playerVelocity.y -= gravity * Time.deltaTime;
     }
 
+    public bool isGrounded()
+    {
+        return characterController.isGrounded;
+    }
 
     void Jump()
     {
@@ -102,6 +107,9 @@ public class PlayerController : MonoBehaviour, iEntity
             state.isClimbing = true;
         }
     }
+
+
+    
 }
 
 
