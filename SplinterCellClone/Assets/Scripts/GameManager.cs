@@ -1,173 +1,129 @@
 using TMPro;
-using UnityEngine.UI;
 using UnityEngine;
-using System;
-using System.Collections;
+using UnityEngine.Playables;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("       Initialization        ")]
-    [SerializeField] String PlayerTag;
-    [SerializeField] String PlayerSpawnTag;
-    
 
+    public static GameManager instance;
 
-
-    [Header("       Menus        ")]
     [SerializeField] GameObject menuActive;
     [SerializeField] GameObject menuPause;
+    [SerializeField] GameObject menuOptions;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
+    [SerializeField] TMP_Text gameGoalText;
+    [SerializeField] TMP_Text intelText;
+
+    public GameObject playerDamageFlash;
 
 
 
-    [Header("       Game State      ")]
-    public bool isPaused;
-    public TMP_Text gameGoalCountText;
-
-    [Header("       Player Variable      ")]
     public GameObject player;
-    public PlayerController playerScript;
+    public bool isPaused;
+    public int briefcaseCount;
 
 
-    [Header("       Player UI      ")]
-    [SerializeField] public GameObject FFASCORE;
-    public GameObject DamageScreen;
-    public GameObject HealScreen;
-    public GameObject playerCompass;
-    public Image playerCompassNeedle;
-    public Image playerCrossHair;
-    [SerializeField] Sprite DefaultCrossHairSprite;
-    [SerializeField] Sprite DefaultWeaponSprite;
-
-    public Image playerHitmarker;
-
-    [Header("SFX")]
-
-    [Header("       Player Weapon UI Elements      ")]
-    public Image playerHPBar;
-    public Image playerGun;
-    public TMP_Text playerGunName;
-    public TMP_Text playerAmmoCur;
-    public TMP_Text playerAmmoReserve;
-
+    float timeScaleOriginal;
 
 
     int gameGoalCount;
-
-    public float timeScaleOrig = 1;
-
-    public static GameManager instance;
-    void toggleCrosshair(bool val)
-    {
-        playerCrossHair.enabled = val;
-    }
-    
-    public void playHitmarker()
-    {
-        StartCoroutine(HitmarkerRoutine());
-        //Debug.Log("HitMarker");
-    }
-
-    IEnumerator HitmarkerRoutine()
-    {
-        //audioSource2D.PlayOneShot(hitmarkerSound2D, hitmarkerSoundVolume);
-        playerHitmarker.gameObject.SetActive(true);
-        yield return new WaitForSeconds(0.05f);
-        playerHitmarker.gameObject.SetActive(false);
-    }
-
-    public void updateGunUI(Sprite gunsprite, Sprite crosshairsprite, int ammo_reserve, int ammo_cur, string GunName)
-    {
-
-        // change crosshair
-        playerGun.sprite = gunsprite;
-        // change gun sprite
-        playerCrossHair.sprite = crosshairsprite;
-        playerCrossHair.rectTransform.sizeDelta = new Vector2(crosshairsprite.rect.width, crosshairsprite.rect.height);
-        // change ammo reserve count
-        updateAmmoUI(ammo_reserve, ammo_cur);
-        // change gun name
-        playerGunName.text = GunName;
-
-    }
-    
-    public void ClearGunUI()
-    {
-      
-        // change crosshair
-        playerGun.sprite = DefaultWeaponSprite;
-        // change gun sprite
-        playerCrossHair.sprite = DefaultCrossHairSprite;
-        // change ammo reserve count
-        updateAmmoUI(0, 0);
-        // change gun name
-        playerGunName.text = "";
-
-    }
-    public void updateAmmoUI(int ammo_reserve, int ammo_cur)
-    {   // change ammo reserve count
-        playerAmmoReserve.text = ammo_reserve.ToString();
-        // change ammo current
-        playerAmmoCur.text = ammo_cur.ToString();
-    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         instance = this;
+        timeScaleOriginal = Time.timeScale;
+
+        player = GameObject.FindWithTag("Player");
     }
+
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetButtonDown("Cancel"))
+        {
+            if (menuActive == null)
+            {
+                StatePause();
 
+                menuActive = menuPause;
+                menuActive.SetActive(true);
+            }
+            else if (menuActive == menuPause)
+            {
+                StateUnpause();
+            }
+        }
     }
 
-    private void Start()
-    {
 
-    }
-    public void statePause()
+
+    public void StatePause()
     {
-        toggleCrosshair(false);
         isPaused = true;
         Time.timeScale = 0;
+
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-
     }
 
-    public void stateUnPause()
+
+    public void StateUnpause()
     {
-        toggleCrosshair(true);
         isPaused = false;
-        Time.timeScale = timeScaleOrig;
+        Time.timeScale = timeScaleOriginal;
+
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         menuActive.SetActive(false);
         menuActive = null;
     }
 
-    public void youLose()
+    public void OptionsScreen()
     {
-        statePause();
+        StatePause();
+        menuActive = menuOptions;
+        menuActive.SetActive(true);
+    }
+
+    public void QuitToMenu()
+    { 
+
+    }
+
+    public void LoseScreen()
+    {
+        StatePause();
         menuActive = menuLose;
         menuActive.SetActive(true);
-
     }
 
-    public void youWin()
-    {
-        statePause();
-        menuActive = menuWin;
-        menuActive.SetActive(true);
 
-    }
-    public void updateGameGoal(int amount)
+    public void UpdateGameGoal(int amount)
     {
-        gameGoalCount = amount;
-        //updateScore();
-       
+        gameGoalCount += amount;
+        gameGoalText.text = gameGoalCount.ToString("F0");
+
+        CheckWin();
+    }
+
+    public void UpdateBCount(int amount)
+    {
+        briefcaseCount += amount;
+        intelText.text = briefcaseCount.ToString("F0");
+        CheckWin();
+    }
+
+    public void CheckWin()
+    {
+        if (gameGoalCount <= 0 && briefcaseCount <= 0)
+        {
+            StatePause();
+            menuActive = menuWin;
+            menuActive.SetActive(true);
+        }
     }
 }
 

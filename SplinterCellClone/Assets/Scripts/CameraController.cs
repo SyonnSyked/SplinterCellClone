@@ -1,66 +1,45 @@
-using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using DG.Tweening;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] int sensitivity = 3;
-    [SerializeField] int lockRotNegative = -90, lockRotPositive = 90;
-    [SerializeField] bool invertY;
+    public float sensX;
+    public float sensY;
 
     public Transform orientation;
+    public Transform camHolder;
 
-    float camRotX;
-    float camRotY;
+    float xRotation;
+    float yRotation;
 
-    [Header("Camera Shake")]
-    [SerializeField] float shakeDamping = 1f;
-
-    Coroutine shakeRoutine;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    // Update is called once per frame
-    void LateUpdate()
+    private void Update()
     {
-        if(Time.timeScale == 0f)
-        {
-            return;
-        }
+        // get mouse input
+        float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
 
-        float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;         
-        float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime; 
+        yRotation += mouseX;
 
-        if (invertY)
-        {
-            camRotX += mouseY;
-        }
-        else
-        {
-            camRotX -= mouseY;
-        }
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        camRotY += mouseX;
-        camRotX -= mouseY;
-
-        camRotX = Mathf.Clamp(camRotX, lockRotNegative, lockRotPositive);
-       // camRotY = Mathf.Clamp(camRotY, lockRotNegative, lockRotPositive);
-        transform.rotation = Quaternion.Euler(camRotX, camRotY, 0);
-        //orientation.rotation = Quaternion.Euler(0, camRotY, 0);
+        // rotate cam and orientation
+        camHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
     }
 
     private void FixedUpdate()
     {
-       // transform.rotation = Quaternion.Euler(camRotX, camRotY, 0);
-        orientation.rotation = Quaternion.Euler(0, camRotY, 0);
+        
+        orientation.rotation = Quaternion.Euler(0, yRotation, 0);
     }
-
-
 
     public void DoFov(float endValue)
     {
@@ -71,5 +50,4 @@ public class CameraController : MonoBehaviour
     {
         transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.25f);
     }
-
 }
