@@ -7,8 +7,9 @@ public class ShootingComponent : MonoBehaviour
 
     [Header("----Guns----")]
     [SerializeField] int shootDamage;
-    [SerializeField] int shootDist;
     [SerializeField] float shootRate;
+    [SerializeField] GameObject bullet;
+    [SerializeField] Transform shootPos;
 
     float shootTimer;
 
@@ -21,6 +22,7 @@ public class ShootingComponent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        shootTimer += Time.deltaTime;
         if (Input.GetButtonDown("Fire1") && shootTimer >= shootRate)
         {
             Shoot();
@@ -32,18 +34,7 @@ public class ShootingComponent : MonoBehaviour
     {
         shootTimer = 0;
 
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDist, ~ignoreLayer)) ;
-        {
-            Debug.Log(hit.collider.name);
-
-            iDamage dmg = hit.collider.GetComponent<iDamage>();
-
-            if (dmg != null)
-            {
-                dmg.TakeDamage(shootDamage);
-            }
-        }
+        Instantiate(bullet, shootPos.position, transform.rotation);
     }
 
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Splines;
 
 public class EnemyAI : MonoBehaviour, iDamage
 {
@@ -14,6 +15,7 @@ public class EnemyAI : MonoBehaviour, iDamage
     [Header("----Stats----")]
     [SerializeField] int HP;
     [SerializeField] int faceTargetSpeed;
+    [SerializeField] int gunRotateSpeed;
     [SerializeField] int FOV;
     [SerializeField] int roamDist;
     [SerializeField] int roamPauseTime;
@@ -49,21 +51,23 @@ public class EnemyAI : MonoBehaviour, iDamage
 
     void Update()
     {
-        playerDir = GameManager.instance.player.transform.position - transform.position;
 
-        agent.SetDestination(GameManager.instance.player.transform.position);
-
-        if (agent.remainingDistance <= agent.stoppingDistance)
+        if (agent.remainingDistance < 0.01f)
         {
-            FaceTarget();
+            roamTimer += Time.deltaTime;
         }
 
-        shootTimer += Time.deltaTime;
 
-        if (shootTimer >= shootRate)
+        if (playerInTrigger && !CanSeePlayer())
         {
-            Shoot();
+            CheckRoam();
         }
+        else if (!playerInTrigger)
+        {
+            CheckRoam();
+        }
+
+      
     }
 
     void CheckRoam()
@@ -87,10 +91,55 @@ public class EnemyAI : MonoBehaviour, iDamage
         agent.SetDestination(hit.position);
     }
 
+
+    bool CanSeePlayer()
+    {
+        playerDir = GameManager.instance.player.transform.position - transform.position;
+        angleToPlayer = Vector3.Angle(playerDir, transform.forward);
+
+        Debug.DrawRay(transform.position, playerDir);
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, playerDir, out hit))
+        {
+            if (hit.collider.CompareTag("Player") && angleToPlayer <= FOV)
+            {
+                agent.SetDestination(GameManager.instance.player.transform.position);
+
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    FaceTarget();
+                }
+
+                GunRotate();
+
+                shootTimer += Time.deltaTime;
+
+                if (shootTimer >= shootRate)
+                {
+                    Shoot();
+                }
+
+                agent.stoppingDistance = stoppingDistanceOrig;
+                return true;
+            }
+        }
+
+        agent.stoppingDistance = 0;
+        return false;
+    }
+
     void FaceTarget()
     {
         Quaternion rot = Quaternion.LookRotation(playerDir);
         transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
+    }
+
+
+    void GunRotate()
+    {
+        Quaternion rot = Quaternion.LookRotation(playerDir);
+        gunPivot.rotation = Quaternion.Lerp(gunPivot.rotation, rot, Time.deltaTime * gunRotateSpeed);
     }
 
 
@@ -108,6 +157,7 @@ public class EnemyAI : MonoBehaviour, iDamage
         if (other.CompareTag("Player"))
         {
             playerInTrigger = false;
+            agent.stoppingDistance = 0;
         }
     }
 
@@ -119,6 +169,8 @@ public class EnemyAI : MonoBehaviour, iDamage
     public void TakeDamage(int amount)
     {
         HP -= amount;
+
+        agent.SetDestination(GameManager.instance.player.transform.position);
 
         if (HP <= 0)
         {
