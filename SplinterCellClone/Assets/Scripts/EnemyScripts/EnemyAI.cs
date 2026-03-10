@@ -172,13 +172,22 @@ public class EnemyAI : MonoBehaviour, iDamage
 
         agent.SetDestination(GameManager.instance.player.transform.position);
 
-        if (HP <= 0)
+        AmDead(HP);
+    }
+
+
+    bool AmDead(int hp)
+    {
+        if (hp <= 0)
         {
             Destroy(gameObject);
+            GameManager.instance.UpdateEnemyCount(-1);
+            return true;
         }
         else
         {
             StartCoroutine(FlashRed());
+            return false;
         }
     }
 

@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour
     public int briefcaseCount;
 
 
+    bool isPlayerAtExit;
+
+
     float timeScaleOriginal;
 
 
