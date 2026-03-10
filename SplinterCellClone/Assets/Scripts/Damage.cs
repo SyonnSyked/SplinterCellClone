@@ -39,13 +39,14 @@ public class Damage : MonoBehaviour
             dmg.TakeDamage(damageAmount);
         }
 
-        if (type == damageType.bullet)
+        if (dmg != null && type == damageType.bullet)
         {
             if (hitEffect != null)
             {
                 Instantiate(hitEffect, transform.position, Quaternion.identity);
             }
 
+            dmg.TakeDamage(damageAmount);
             Destroy(gameObject);
         }
     }

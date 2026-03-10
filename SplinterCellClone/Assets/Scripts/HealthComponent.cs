@@ -19,6 +19,7 @@ public class HealthComponent : MonoBehaviour, iDamage
     void Start()
     {
         HPOriginal = HP;
+        UpdatePlayerHealth();
     }
 
 
@@ -26,9 +27,17 @@ public class HealthComponent : MonoBehaviour, iDamage
     {
         HP -= amount;
 
+        UpdatePlayerHealth();
+
         if (HP <= 0)
         {
             GameManager.instance.LoseScreen();
         }
+
+    }
+
+    public void UpdatePlayerHealth()
+    {
+        GameManager.instance.playerHPBar.fillAmount = (float)HP / HPOriginal;
     }
 }

@@ -23,6 +23,7 @@ public class EnemyAI : MonoBehaviour, iDamage
     [SerializeField] float shootRate;
     [SerializeField] Transform shootPos;
     [SerializeField] Transform gun;
+    [SerializeField] Transform gunPivot;
 
 
 
@@ -48,20 +49,21 @@ public class EnemyAI : MonoBehaviour, iDamage
 
     void Update()
     {
+        playerDir = GameManager.instance.player.transform.position - transform.position;
+
+        agent.SetDestination(GameManager.instance.player.transform.position);
+
+        if (agent.remainingDistance <= agent.stoppingDistance)
+        {
+            FaceTarget();
+        }
+
         shootTimer += Time.deltaTime;
 
-        if (agent.remainingDistance < 0.01f)
-            roamTimer += Time.deltaTime;
-
-        if (playerInTrigger && !CanSeePlayer())
+        if (shootTimer >= shootRate)
         {
-            CheckRoam();
+            Shoot();
         }
-        else if (!playerInTrigger)
-        {
-            CheckRoam();
-        }
-
     }
 
     void CheckRoam()
@@ -91,38 +93,6 @@ public class EnemyAI : MonoBehaviour, iDamage
         transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
     }
 
-    bool CanSeePlayer()
-    {
-        playerDir = GameManager.instance.player.transform.position - transform.position;
-        angleToPlayer = Vector3.Angle(playerDir, transform.forward);
-
-        Debug.DrawRay(shootPos.position, playerDir, Color.red);
-
-        RaycastHit hit;
-
-        if (Physics.Raycast(shootPos.position, playerDir, out hit))
-        {
-            if (angleToPlayer <= FOV && hit.collider.CompareTag("Player"))
-            {
-                agent.SetDestination(GameManager.instance.player.transform.position);
-
-                if (agent.remainingDistance < agent.stoppingDistance)
-                {
-                    FaceTarget();
-                }
-
-                if (shootTimer > shootRate)
-                {
-                    Shoot();
-                }
-
-                agent.stoppingDistance = stoppingDistanceOrig;
-                return true;
-            }
-        }
-        agent.stoppingDistance = 0;
-        return false;
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -138,7 +108,6 @@ public class EnemyAI : MonoBehaviour, iDamage
         if (other.CompareTag("Player"))
         {
             playerInTrigger = false;
-            agent.stoppingDistance = 0;
         }
     }
 
