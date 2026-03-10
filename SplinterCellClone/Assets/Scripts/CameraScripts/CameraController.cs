@@ -11,8 +11,11 @@ public class CameraController : MonoBehaviour
     public Transform orientation;
     public Transform camHolder;
 
+
     float xRotation;
     float yRotation;
+
+    float camSpeed;
 
     private void Start()
     {
@@ -39,6 +42,12 @@ public class CameraController : MonoBehaviour
     {
         
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+        camSpeed = (Vector3.Distance(orientation.position, camHolder.position));
+    }
+
+    public float GetCameraSpeed()
+    {
+        return camSpeed;
     }
 
     public void DoFov(float endValue)

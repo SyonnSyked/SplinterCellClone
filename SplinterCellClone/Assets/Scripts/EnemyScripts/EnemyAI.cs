@@ -164,7 +164,7 @@ public class EnemyAI : MonoBehaviour, iDamage
     void Shoot()
     {
         shootTimer = 0;
-        Instantiate(bullet, shootPos.position, transform.rotation);
+        Instantiate(bullet, shootPos.position, gunPivot.transform.rotation);
     }
     public void TakeDamage(int amount)
     {
