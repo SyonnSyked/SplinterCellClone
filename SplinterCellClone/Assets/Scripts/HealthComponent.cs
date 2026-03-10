@@ -1,12 +1,43 @@
+using UnityEditor.Build.Content;
 using UnityEngine;
 
-public class HealthComponent : MonoBehaviour 
+public class HealthComponent : MonoBehaviour, iDamage
 {
-   public int currentHP;
-   public int maxHP;
-   public float headshotModifier;
+    
+
+    [Header("----Stats----")]
+    [Range(0, 100)][SerializeField] int HP;
 
 
-   //public void TakeDamage();
-   //public void TakeDamage(float headshotMod);
+    
+
+
+    int HPOriginal;
+
+   
+
+    void Start()
+    {
+        HPOriginal = HP;
+        UpdatePlayerHealth();
+    }
+
+
+    public void TakeDamage(int amount)
+    {
+        HP -= amount;
+
+        UpdatePlayerHealth();
+
+        if (HP <= 0)
+        {
+            GameManager.instance.LoseScreen();
+        }
+
+    }
+
+    public void UpdatePlayerHealth()
+    {
+        GameManager.instance.playerHPBar.fillAmount = (float)HP / HPOriginal;
+    }
 }
