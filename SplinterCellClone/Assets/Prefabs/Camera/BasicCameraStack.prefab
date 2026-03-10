@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd881c2f587f3344ab484b68f9c52d63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CamFollow
-  cameraPosition: {fileID: 0}
+  cameraPosition: {fileID: 6114433840132445479, guid: 3be377907f66c4d439815481aff21d03, type: 3}
 --- !u!1001 &902460546105929919
 PrefabInstance:
   m_ObjectHideFlags: 0
