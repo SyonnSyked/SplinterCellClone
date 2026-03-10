@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public bool isPaused;
     public int briefcaseCount;
-
+    public int enemyCount;
 
     bool isPlayerAtExit;
 
@@ -33,7 +33,6 @@ public class GameManager : MonoBehaviour
     float timeScaleOriginal;
 
 
-    int enemyCount;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -110,15 +109,12 @@ public class GameManager : MonoBehaviour
     {
         enemyCount += amount;
         enemyCountText.text = enemyCount.ToString("F0");
-
-        CheckWin();
     }
 
     public void UpdateBCount(int amount)
     {
         briefcaseCount += amount;
         intelText.text = briefcaseCount.ToString("F0");
-        CheckWin();
     }
 
     public void CheckWin()
