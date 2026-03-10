@@ -137,8 +137,8 @@ public class WallRunning : MonoBehaviour
 
         // apply camera effects
         cam.DoFov(90f);
-        if (wallLeft) cam.DoTilt(-5f);
-        if (wallRight) cam.DoTilt(5f);
+        if (wallLeft) cam.DoTilt();
+        if (wallRight) cam.DoTilt();
     }
 
     private void WallRunningMovement()
@@ -176,7 +176,7 @@ public class WallRunning : MonoBehaviour
 
         // reset camera effects
         cam.DoFov(80f);
-        cam.DoTilt(0f);
+        cam.DoTilt();
     }
 
     private void WallJump()

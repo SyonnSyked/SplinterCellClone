@@ -1417,6 +1417,18 @@ PrefabInstance:
       propertyPath: orientation
       value: 
       objectReference: {fileID: 1613282933}
+    - target: {fileID: 7353018384698186255, guid: 430e31e7d51fdaa40ab3bc601e8327af, type: 3}
+      propertyPath: camAdjustSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7353018384698186255, guid: 430e31e7d51fdaa40ab3bc601e8327af, type: 3}
+      propertyPath: tiltTargetRotation.w
+      value: 0.99904823
+      objectReference: {fileID: 0}
+    - target: {fileID: 7353018384698186255, guid: 430e31e7d51fdaa40ab3bc601e8327af, type: 3}
+      propertyPath: tiltTargetRotation.z
+      value: 0.043619387
+      objectReference: {fileID: 0}
     - target: {fileID: 8933343373264870495, guid: 430e31e7d51fdaa40ab3bc601e8327af, type: 3}
       propertyPath: cameraPosition
       value: 
