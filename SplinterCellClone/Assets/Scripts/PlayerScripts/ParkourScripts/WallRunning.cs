@@ -79,7 +79,6 @@ public class WallRunning : MonoBehaviour
 
     private void StateMachine()
     {
-        // Getting Inputs
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
@@ -92,7 +91,6 @@ public class WallRunning : MonoBehaviour
             if (!pm.wallrunning)
                 StartWallRun();
 
-            // wallrun timer
             if (wallRunTimer > 0)
                 wallRunTimer -= Time.deltaTime;
 
@@ -102,7 +100,6 @@ public class WallRunning : MonoBehaviour
                 exitWallTimer = exitWallTime;
             }
 
-            // wall jump
             if (Input.GetKeyDown(jumpKey)) WallJump();
         }
 
@@ -152,10 +149,8 @@ public class WallRunning : MonoBehaviour
         if ((orientation.forward - wallForward).magnitude > (orientation.forward - -wallForward).magnitude)
             wallForward = -wallForward;
 
-        // forward force
         rb.AddForce(wallForward * wallRunForce, ForceMode.Force);
 
-        // upwards/downwards force
         if (upwardsRunning)
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, wallClimbSpeed, rb.linearVelocity.z);
         if (downwardsRunning)
@@ -183,7 +178,6 @@ public class WallRunning : MonoBehaviour
     {
         if (lg.holding || lg.exitingLedge) return;
 
-        // enter exiting wall state
         exitingWall = true;
         exitWallTimer = exitWallTime;
 
