@@ -53,7 +53,6 @@ public class AdvancedMovement : MonoBehaviour
 
     [Header("References")]
     public Climbing climbingScript;
-    //private ClimbingDone climbingScriptDone;
 
     public Transform orientation;
 
@@ -125,7 +124,6 @@ public class AdvancedMovement : MonoBehaviour
         StateHandler();
         //TextStuff();
 
-        // handle drag
         if (grounded)
             rb.linearDamping = groundDrag;
         else
@@ -142,7 +140,6 @@ public class AdvancedMovement : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        // when to jump
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
             readyToJump = false;
@@ -152,7 +149,6 @@ public class AdvancedMovement : MonoBehaviour
             Invoke(nameof(ResetJump), jumpCooldown);
         }
 
-        // start crouch
         if (Input.GetKeyDown(crouchKey) && horizontalInput == 0 && verticalInput == 0)
         {
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
@@ -161,7 +157,6 @@ public class AdvancedMovement : MonoBehaviour
             crouching = true;
         }
 
-        // stop crouch
         if (Input.GetKeyUp(crouchKey))
         {
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
@@ -173,7 +168,6 @@ public class AdvancedMovement : MonoBehaviour
     bool keepMomentum;
     private void StateHandler()
     {
-        // Mode - Freeze
         if (freeze)
         {
             state = MovementState.freeze;
@@ -181,35 +175,30 @@ public class AdvancedMovement : MonoBehaviour
             desiredMoveSpeed = 0f;
         }
 
-        // Mode - Unlimited
         else if (unlimited)
         {
             state = MovementState.unlimited;
             desiredMoveSpeed = 999f;
         }
 
-        // Mode - Vaulting
         else if (vaulting)
         {
             state = MovementState.vaulting;
             desiredMoveSpeed = vaultSpeed;
         }
 
-        // Mode - Climbing
         else if (climbing)
         {
             state = MovementState.climbing;
             desiredMoveSpeed = climbSpeed;
         }
 
-        // Mode - Wallrunning
         else if (wallrunning)
         {
             state = MovementState.wallrunning;
             desiredMoveSpeed = wallrunSpeed;
         }
 
-        // Mode - Sliding
         else if (sliding)
         {
             state = MovementState.sliding;
@@ -225,28 +214,24 @@ public class AdvancedMovement : MonoBehaviour
                 desiredMoveSpeed = sprintSpeed;
         }
 
-        // Mode - Crouching
         else if (crouching)
         {
             state = MovementState.crouching;
             desiredMoveSpeed = crouchSpeed;
         }
 
-        // Mode - Sprinting
         else if (grounded && Input.GetKey(sprintKey))
         {
             state = MovementState.sprinting;
             desiredMoveSpeed = sprintSpeed;
         }
 
-        // Mode - Walking
         else if (grounded)
         {
             state = MovementState.walking;
             desiredMoveSpeed = walkSpeed;
         }
 
-        // Mode - Air
         else
         {
             state = MovementState.air;
@@ -272,13 +257,11 @@ public class AdvancedMovement : MonoBehaviour
 
         lastDesiredMoveSpeed = desiredMoveSpeed;
 
-        // deactivate keepMomentum
         if (Mathf.Abs(desiredMoveSpeed - moveSpeed) < 0.1f) keepMomentum = false;
     }
 
     private IEnumerator SmoothlyLerpMoveSpeed()
     {
-        // smoothly lerp movementSpeed to desired value
         float time = 0;
         float difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
         float startValue = moveSpeed;
@@ -306,13 +289,10 @@ public class AdvancedMovement : MonoBehaviour
     private void MovePlayer()
     {
         if (climbingScript.exitingWall) return;
-        //if (climbingScriptDone.exitingWall) return;
         if (restricted) return;
 
-        // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        // on slope
         if (OnSlope() && !exitingSlope)
         {
             rb.AddForce(GetSlopeMoveDirection(moveDirection) * moveSpeed * 20f, ForceMode.Force);
@@ -321,11 +301,9 @@ public class AdvancedMovement : MonoBehaviour
                 rb.AddForce(Vector3.down * 80f, ForceMode.Force);
         }
 
-        // on ground
         else if (grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
 
-        // in air
         else if (!grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
 
@@ -335,19 +313,16 @@ public class AdvancedMovement : MonoBehaviour
 
     private void SpeedControl()
     {
-        // limiting speed on slope
         if (OnSlope() && !exitingSlope)
         {
             if (rb.linearVelocity.magnitude > moveSpeed)
                 rb.linearVelocity = rb.linearVelocity.normalized * moveSpeed;
         }
 
-        // limiting speed on ground or in air
         else
         {
             Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
-            // limit velocity if needed
             if (flatVel.magnitude > moveSpeed)
             {
                 Vector3 limitedVel = flatVel.normalized * moveSpeed;
@@ -360,7 +335,6 @@ public class AdvancedMovement : MonoBehaviour
     {
         exitingSlope = true;
 
-        // reset y velocity
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);

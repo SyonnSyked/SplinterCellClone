@@ -126,21 +126,18 @@ public class LedgeGrabbing : MonoBehaviour
         Vector3 directionToLedge = currLedge.position - transform.position;
         float distanceToLedge = Vector3.Distance(transform.position, currLedge.position);
 
-        // Move player towards ledge
         if (distanceToLedge > 1f)
         {
             if (rb.linearVelocity.magnitude < moveToLedgeSpeed)
                 rb.AddForce(directionToLedge.normalized * moveToLedgeSpeed * 1000f * Time.deltaTime);
         }
 
-        // Hold onto ledge
         else
         {
             if (!pm.freeze) pm.freeze = true;
             if (pm.unlimited) pm.unlimited = false;
         }
 
-        // Exiting if something goes wrong
         if (distanceToLedge > maxLedgeGrabDistance) ExitLedgeHold();
     }
 

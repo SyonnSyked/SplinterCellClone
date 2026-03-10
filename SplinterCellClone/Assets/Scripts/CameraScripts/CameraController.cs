@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 
 public class CameraController : MonoBehaviour
 {
@@ -11,11 +10,39 @@ public class CameraController : MonoBehaviour
     public Transform orientation;
     public Transform camHolder;
 
+    [SerializeField] float camAdjustSpeed;
 
     float xRotation;
     float yRotation;
 
     float camSpeed;
+
+    float camFOV;
+
+
+    [SerializeField] Quaternion tiltTargetRotation;
+
+    
+
+    // Coroutine to smoothly rotate the camera
+    IEnumerator RotateCamera(Quaternion target, float time)
+    {
+        Quaternion startRotation = transform.rotation;
+        float elapsed = 0f;
+
+        while (elapsed < time)
+        {
+            // Slerp from the start rotation to the target rotation over time
+            transform.rotation = Quaternion.Slerp(startRotation, target, elapsed / time);
+            elapsed += Time.deltaTime;
+            yield return null; // Wait until the next frame
+        }
+
+        // Ensure the final rotation is exactly the target rotation
+        transform.rotation = target;
+    }
+
+
 
     private void Start()
     {
@@ -52,11 +79,13 @@ public class CameraController : MonoBehaviour
 
     public void DoFov(float endValue)
     {
-        GetComponent<Camera>().DOFieldOfView(endValue, 0.25f);
+        camFOV = GetComponent<Camera>().fieldOfView;
+
+        camFOV = Mathf.Lerp(camFOV, endValue, Time.deltaTime * camAdjustSpeed);
     }
 
-    public void DoTilt(float zTilt)
+    public void DoTilt()
     {
-        transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.25f);
+        StartCoroutine(RotateCamera(tiltTargetRotation, camAdjustSpeed));
     }
 }
