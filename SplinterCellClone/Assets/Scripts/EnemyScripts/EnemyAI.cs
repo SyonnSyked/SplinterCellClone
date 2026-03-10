@@ -1,20 +1,192 @@
-  using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using TMPro;
-using Unity.AI.Navigation;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Animations;
-using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
+using UnityEngine.Splines;
 
-
-
-public class EnemyAI : MonoBehaviour
+public class EnemyAI : MonoBehaviour, iDamage
 {
-    
+
+    [Header("----Components----")]
+    [SerializeField] Renderer model;
+    [SerializeField] NavMeshAgent agent;
+
+    Color colorOriginal;
+
+    [Header("----Stats----")]
+    [SerializeField] int HP;
+    [SerializeField] int faceTargetSpeed;
+    [SerializeField] int gunRotateSpeed;
+    [SerializeField] int FOV;
+    [SerializeField] int roamDist;
+    [SerializeField] int roamPauseTime;
+
+    [Header("----GunRelated----")]
+    [SerializeField] GameObject bullet;
+    [SerializeField] float shootRate;
+    [SerializeField] Transform shootPos;
+    [SerializeField] Transform gun;
+    [SerializeField] Transform gunPivot;
+
+
+
+    float shootTimer;
+    float roamTimer;
+    float angleToPlayer;
+    float stoppingDistanceOrig;
+
+    bool playerInTrigger;
+
+    Vector3 playerDir;
+    Vector3 startingPos;
+
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        colorOriginal = model.material.color;
+        GameManager.instance.UpdateEnemyCount(1);
+        stoppingDistanceOrig = agent.stoppingDistance;
+        startingPos = transform.position;
+    }
+
+    void Update()
+    {
+
+        if (agent.remainingDistance < 0.01f)
+        {
+            roamTimer += Time.deltaTime;
+        }
+
+
+        if (playerInTrigger && !CanSeePlayer())
+        {
+            CheckRoam();
+        }
+        else if (!playerInTrigger)
+        {
+            CheckRoam();
+        }
+
+      
+    }
+
+    void CheckRoam()
+    {
+        if (agent.remainingDistance < 0.01f && roamTimer >= roamPauseTime)
+        {
+            Roam();
+        }
+    }
+
+    void Roam()
+    {
+        roamTimer = 0;
+        agent.stoppingDistance = 0;
+
+        Vector3 randomPos = Random.insideUnitSphere * roamDist;
+        randomPos += startingPos;
+
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randomPos, out hit, roamDist, 1);
+        agent.SetDestination(hit.position);
+    }
+
+
+    bool CanSeePlayer()
+    {
+        playerDir = GameManager.instance.player.transform.position - transform.position;
+        angleToPlayer = Vector3.Angle(playerDir, transform.forward);
+
+        Debug.DrawRay(transform.position, playerDir);
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, playerDir, out hit))
+        {
+            if (hit.collider.CompareTag("Player") && angleToPlayer <= FOV)
+            {
+                agent.SetDestination(GameManager.instance.player.transform.position);
+
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    FaceTarget();
+                }
+
+                GunRotate();
+
+                shootTimer += Time.deltaTime;
+
+                if (shootTimer >= shootRate)
+                {
+                    Shoot();
+                }
+
+                agent.stoppingDistance = stoppingDistanceOrig;
+                return true;
+            }
+        }
+
+        agent.stoppingDistance = 0;
+        return false;
+    }
+
+    void FaceTarget()
+    {
+        Quaternion rot = Quaternion.LookRotation(playerDir);
+        transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
+    }
+
+
+    void GunRotate()
+    {
+        Quaternion rot = Quaternion.LookRotation(playerDir);
+        gunPivot.rotation = Quaternion.Lerp(gunPivot.rotation, rot, Time.deltaTime * gunRotateSpeed);
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInTrigger = true;
+        }
+    }
+
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInTrigger = false;
+            agent.stoppingDistance = 0;
+        }
+    }
+
+    void Shoot()
+    {
+        shootTimer = 0;
+        Instantiate(bullet, shootPos.position, gunPivot.transform.rotation);
+    }
+    public void TakeDamage(int amount)
+    {
+        HP -= amount;
+
+        agent.SetDestination(GameManager.instance.player.transform.position);
+
+        if (HP <= 0)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            StartCoroutine(FlashRed());
+        }
+    }
+
+    IEnumerator FlashRed()
+    {
+        model.material.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+
+        model.material.color = colorOriginal;
+    }
 }

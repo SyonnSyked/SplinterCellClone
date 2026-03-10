@@ -42,10 +42,10 @@ public class WallRunning : MonoBehaviour
 
     [Header("References")]
     public Transform orientation;
-    public CameraController cam;
+    [SerializeField] CameraController cam;
     private AdvancedMovement pm;
     private LedgeGrabbing lg;
-    private Rigidbody rb;
+    [SerializeField] Rigidbody rb;
 
     private void Start()
     {

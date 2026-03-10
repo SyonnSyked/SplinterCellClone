@@ -13,8 +13,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuOptions;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
-    [SerializeField] TMP_Text gameGoalText;
+    [SerializeField] TMP_Text enemyCountText;
     [SerializeField] TMP_Text intelText;
+    
+    public Image playerHPBar;
 
     public GameObject playerDamageFlash;
 
@@ -28,7 +30,7 @@ public class GameManager : MonoBehaviour
     float timeScaleOriginal;
 
 
-    int gameGoalCount;
+    int enemyCount;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -101,10 +103,10 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void UpdateGameGoal(int amount)
+    public void UpdateEnemyCount(int amount)
     {
-        gameGoalCount += amount;
-        gameGoalText.text = gameGoalCount.ToString("F0");
+        enemyCount += amount;
+        enemyCountText.text = enemyCount.ToString("F0");
 
         CheckWin();
     }
@@ -118,7 +120,7 @@ public class GameManager : MonoBehaviour
 
     public void CheckWin()
     {
-        if (gameGoalCount <= 0 && briefcaseCount <= 0)
+        if (enemyCount <= 0 && briefcaseCount <= 0)
         {
             StatePause();
             menuActive = menuWin;
