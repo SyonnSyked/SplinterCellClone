@@ -4,13 +4,13 @@ public class Spawner: MonoBehaviour
 {
     [Header("----SpawnerData----")]
     [SerializeField] Transform spawnPos;
+    [SerializeField] GameObject spawnPrefab;
     [SerializeField] int spawnLimit;
 
-    private int enemyCount;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        Instantiate(spawnPrefab, spawnPos, false);
     }
 
     // Update is called once per frame
