@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 1732336069044146181}
   - component: {fileID: 2860919369765709281}
   - component: {fileID: 457435952295600741}
-  m_Layer: 0
-  m_Name: Bullet
+  m_Layer: 14
+  m_Name: EnemyBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,7 +51,7 @@ MonoBehaviour:
   rb: {fileID: 457435952295600741}
   damageAmount: 20
   damageRate: 0
-  speed: 30
+  speed: 100
   destroyTime: 3
   hitEffect: {fileID: 0}
 --- !u!135 &1732336069044146181

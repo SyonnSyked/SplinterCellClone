@@ -171,7 +171,7 @@ MonoBehaviour:
   FOV: 90
   roamDist: 40
   roamPauseTime: 3
-  bullet: {fileID: 328919941245513563, guid: ef32022a3d27ed84b977edb406a0f470, type: 3}
+  bullet: {fileID: 328919941245513563, guid: f2a609a577d003b4f84c1915bb25112c, type: 3}
   shootRate: 0.3
   shootPos: {fileID: 7550863735718717656}
   gun: {fileID: 5106481117386324464, guid: b4d01bc533dae364f950d1fb291ebb9e, type: 3}
