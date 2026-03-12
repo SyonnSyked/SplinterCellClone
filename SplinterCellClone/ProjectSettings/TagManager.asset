@@ -13,11 +13,11 @@ TagManager:
   - UI
   - wallLayerMask
   - groundLayerMask
-  - player
+  - Player
   - ledge
   - Camera
-  - 
-  - 
+  - Enemy
+  - Body
   - 
   - 
   - 
