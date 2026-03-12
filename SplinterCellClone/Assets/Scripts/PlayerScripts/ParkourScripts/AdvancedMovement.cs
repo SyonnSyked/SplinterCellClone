@@ -245,7 +245,7 @@ public class AdvancedMovement : MonoBehaviour
             usingStamina = true;
         }
 
-        else if (grounded)
+        else if (grounded && !sprinting)
         {
             state = MovementState.walking;
             desiredMoveSpeed = walkSpeed;
@@ -341,6 +341,7 @@ public class AdvancedMovement : MonoBehaviour
             return true;
         }
 
+        staminaComponent.SetUsingStamina(false);
         return false;
     }
 

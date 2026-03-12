@@ -7,7 +7,7 @@ public class StaminaComponent : MonoBehaviour
     [SerializeField] float staminaRechargeRate;
     [SerializeField] float rechargeDelayTimer;
 
-    public float currentStamina;
+    float currentStamina;
     float rechargeTimer;
 
     bool staminaEmpty;
@@ -25,6 +25,8 @@ public class StaminaComponent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateStaminaMeter();
+
         if (usingStamina)
         {
             DepleteStamina();
@@ -42,6 +44,7 @@ public class StaminaComponent : MonoBehaviour
                 }
             }
         }
+
     }
 
 
@@ -68,8 +71,10 @@ public class StaminaComponent : MonoBehaviour
     }
 
     void UpdateStaminaMeter()
-    { 
+    {
+        GameManager.instance.playerStamBar.fillAmount = Mathf.Lerp(staminaPool, currentStamina, staminaLossRate) / Time.deltaTime;
 
+        Debug.Log("Calling Stam meter funciton!");
     }
 
 
