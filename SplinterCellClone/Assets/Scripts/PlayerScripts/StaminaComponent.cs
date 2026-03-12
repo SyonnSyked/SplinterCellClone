@@ -72,7 +72,7 @@ public class StaminaComponent : MonoBehaviour
 
     void UpdateStaminaMeter()
     {
-        GameManager.instance.playerStamBar.fillAmount = Mathf.Lerp(staminaPool, currentStamina, staminaLossRate) / Time.deltaTime;
+        GameManager.instance.playerStamBar.fillAmount = currentStamina / staminaPool;
 
         Debug.Log("Calling Stam meter funciton!");
     }
