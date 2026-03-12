@@ -18,6 +18,15 @@ public class EnemyGuard : MonoBehaviour
     public float buddyCheckTimer = 0f;
     public const float BUDDY_MISSING_THRESHOLD = 30f;
 
+    [Header("Combat Settings")]
+    [SerializeField] int HP;
+    public float AttackRange = 2.0f;
+    public float AttackCooldown = 1.5f;
+    [SerializeField] Renderer model;
+    private float LastAttackTime;
+    private Transform PlayerTransform;
+    Color colorOrg;
+
     [Header("Memory")]
     private List<Vector3> distractionHistory = new List<Vector3>();
     private static List<EnemyGuard> allGuards = new List<EnemyGuard>();
@@ -41,6 +50,7 @@ public class EnemyGuard : MonoBehaviour
                 break;
             case AIState.HighAlert:
                 agent.speed = 5.0f; // Run to player or body
+                AttackPlayer();
                 break;
         }
     }
@@ -130,4 +140,58 @@ public class EnemyGuard : MonoBehaviour
             agent.destination = alertPos;
         }
     }
+
+    void AttackPlayer()
+    {
+        if (PlayerTransform == null)
+        {
+            PlayerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+
+            float distance = Vector3.Distance(transform.position, PlayerTransform.position);
+
+            agent.SetDestination(PlayerTransform.position);
+
+            if(distance <= AttackRange)
+            {
+                Vector3 lookPos = PlayerTransform.position - transform.position;
+                lookPos.y = 0f;
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookPos), 10 * Time.deltaTime);
+
+                if(Time.time > LastAttackTime + AttackCooldown)
+                {
+                    Attack();
+                    LastAttackTime = Time.time;
+                }
+            }
+        }
+    }
+
+    void Attack()
+    {
+        Debug.Log($"{gameObject.name} attack!");
+
+    }
+
+    public void TakeDamage(int amount)
+    {
+        HP -= amount;
+        agent.SetDestination(GameManager.instance.player.transform.position);
+
+        if (HP <= 0)
+        {
+            GameManager.instance.UpdateGameGoal(-1);
+            Destroy(gameObject);
+        }
+        else
+        {
+            StartCoroutine(flashRed());
+        }
+    }
+    IEnumerator flashRed()
+    {
+        model.material.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        model.material.color = colorOrg;
+    }
+
 }
