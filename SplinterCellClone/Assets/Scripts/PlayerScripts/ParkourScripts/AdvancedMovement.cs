@@ -127,6 +127,7 @@ public class AdvancedMovement : MonoBehaviour
         SpeedControl();
         StateHandler();
         PlayerUsingStamina();
+        HandleStaminaEmpty();
         //TextStuff();
 
         if (grounded)
@@ -345,6 +346,15 @@ public class AdvancedMovement : MonoBehaviour
         return false;
     }
 
+    private void HandleStaminaEmpty()
+    {
+        if (staminaComponent.GetCurrentStamina() <= 0)
+        {
+            sprinting = false;
+            wallrunning = false;
+            climbing = false;
+        }
+    }
 
 
     private void SpeedControl()
@@ -397,18 +407,4 @@ public class AdvancedMovement : MonoBehaviour
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
-
-  /*  private void TextStuff()
-    {
-        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-
-        if (OnSlope())
-            text_speed.SetText("Speed: " + Round(rb.linearVelocity.magnitude, 1) + " / " + Round(moveSpeed, 1));
-
-        else
-            text_speed.SetText("Speed: " + Round(flatVel.magnitude, 1) + " / " + Round(moveSpeed, 1));
-
-        text_mode.SetText(state.ToString());
-    } */
-
 }
