@@ -87,4 +87,9 @@ public class StaminaComponent : MonoBehaviour
     {
         return currentStamina > 0f;
     }
+
+    public float GetCurrentStamina()
+    {
+        return currentStamina;
+    }
 }

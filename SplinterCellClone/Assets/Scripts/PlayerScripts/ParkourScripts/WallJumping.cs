@@ -49,7 +49,7 @@ public class WallJump : MonoBehaviour
         if (wallLeft)
             jumpForce += orientation.right * jumpSideForce;
 
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
         rb.AddForce(jumpForce, ForceMode.Impulse);
     }
