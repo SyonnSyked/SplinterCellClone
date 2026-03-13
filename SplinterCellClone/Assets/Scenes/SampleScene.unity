@@ -874,6 +874,10 @@ PrefabInstance:
       value: FullPlayerStack
       objectReference: {fileID: 0}
     - target: {fileID: 6090433904835388670, guid: 33ee71859c7a9c44da1e8053a7d07f19, type: 3}
+      propertyPath: playerInput
+      value: 
+      objectReference: {fileID: 1339634911}
+    - target: {fileID: 6090433904835388670, guid: 33ee71859c7a9c44da1e8053a7d07f19, type: 3}
       propertyPath: staminaComponent
       value: 
       objectReference: {fileID: 1339634902}
@@ -883,6 +887,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8963786382765104418, guid: 33ee71859c7a9c44da1e8053a7d07f19, type: 3}
       insertIndex: 1
+      addedObject: {fileID: 1339634911}
+    - targetCorrespondingSourceObject: {fileID: 8963786382765104418, guid: 33ee71859c7a9c44da1e8053a7d07f19, type: 3}
+      insertIndex: 2
       addedObject: {fileID: 1339634902}
   m_SourcePrefab: {fileID: 100100000, guid: 33ee71859c7a9c44da1e8053a7d07f19, type: 3}
 --- !u!1 &1339634901 stripped
@@ -906,7 +913,27 @@ MonoBehaviour:
   staminaLossRate: 5
   staminaRechargeRate: 7
   rechargeDelayTimer: 1.4
-  currentStamina: 0
+--- !u!114 &1339634911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339634901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f3e46c3f05a04b40adea24e719dc386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputComponent
+  groundedMove: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  sprint: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  jump: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  crouch: {fileID: 7040659881675835329, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  slide: {fileID: 7040659881675835329, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  climb: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  wallRun: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  wallJump: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  ledgeGrab: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1001 &1666290087
 PrefabInstance:
   m_ObjectHideFlags: 0
