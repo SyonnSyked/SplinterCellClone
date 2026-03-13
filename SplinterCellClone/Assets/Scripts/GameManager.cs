@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text intelText;
     
     public Image playerHPBar;
+    public Image playerStamBar;
 
     public GameObject playerDamageFlash;
 

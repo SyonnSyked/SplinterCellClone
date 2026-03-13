@@ -18,6 +18,8 @@ public class AdvancedMovement : MonoBehaviour
     public float vaultSpeed;
     public float airMinSpeed;
 
+    [SerializeField] StaminaComponent staminaComponent;
+
     public float speedIncreaseMultiplier;
     public float slopeIncreaseMultiplier;
 
@@ -78,6 +80,8 @@ public class AdvancedMovement : MonoBehaviour
         air
     }
 
+    public bool usingStamina;
+    public bool sprinting;
     public bool sliding;
     public bool crouching;
     public bool wallrunning;
@@ -122,6 +126,8 @@ public class AdvancedMovement : MonoBehaviour
         MyInput();
         SpeedControl();
         StateHandler();
+        PlayerUsingStamina();
+        HandleStaminaEmpty();
         //TextStuff();
 
         if (grounded)
@@ -147,6 +153,16 @@ public class AdvancedMovement : MonoBehaviour
             Jump();
 
             Invoke(nameof(ResetJump), jumpCooldown);
+        }
+
+        if (Input.GetKeyDown(sprintKey) && grounded)
+        {
+            sprinting = true;
+        }
+
+        if (Input.GetKeyUp(sprintKey) && grounded)
+        {
+            sprinting = false;
         }
 
         if (Input.GetKeyDown(crouchKey) && horizontalInput == 0 && verticalInput == 0)
@@ -191,12 +207,14 @@ public class AdvancedMovement : MonoBehaviour
         {
             state = MovementState.climbing;
             desiredMoveSpeed = climbSpeed;
+            usingStamina = true;
         }
 
         else if (wallrunning)
         {
             state = MovementState.wallrunning;
             desiredMoveSpeed = wallrunSpeed;
+            usingStamina = true;
         }
 
         else if (sliding)
@@ -218,23 +236,27 @@ public class AdvancedMovement : MonoBehaviour
         {
             state = MovementState.crouching;
             desiredMoveSpeed = crouchSpeed;
+            usingStamina = false;
         }
 
-        else if (grounded && Input.GetKey(sprintKey))
+        else if (sprinting)
         {
             state = MovementState.sprinting;
             desiredMoveSpeed = sprintSpeed;
+            usingStamina = true;
         }
 
-        else if (grounded)
+        else if (grounded && !sprinting)
         {
             state = MovementState.walking;
             desiredMoveSpeed = walkSpeed;
+            usingStamina = false;
         }
 
         else
         {
             state = MovementState.air;
+            usingStamina = false;
 
             if (moveSpeed < airMinSpeed)
                 desiredMoveSpeed = airMinSpeed;
@@ -311,6 +333,30 @@ public class AdvancedMovement : MonoBehaviour
         if (!wallrunning) rb.useGravity = !OnSlope();
     }
 
+    private bool PlayerUsingStamina()
+    {
+        if (usingStamina)
+        {
+            staminaComponent.SetUsingStamina(true);
+
+            return true;
+        }
+
+        staminaComponent.SetUsingStamina(false);
+        return false;
+    }
+
+    private void HandleStaminaEmpty()
+    {
+        if (staminaComponent.GetCurrentStamina() <= 0)
+        {
+            sprinting = false;
+            wallrunning = false;
+            climbing = false;
+        }
+    }
+
+
     private void SpeedControl()
     {
         if (OnSlope() && !exitingSlope)
@@ -360,24 +406,5 @@ public class AdvancedMovement : MonoBehaviour
     public Vector3 GetSlopeMoveDirection(Vector3 direction)
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
-    }
-
-  /*  private void TextStuff()
-    {
-        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-
-        if (OnSlope())
-            text_speed.SetText("Speed: " + Round(rb.linearVelocity.magnitude, 1) + " / " + Round(moveSpeed, 1));
-
-        else
-            text_speed.SetText("Speed: " + Round(flatVel.magnitude, 1) + " / " + Round(moveSpeed, 1));
-
-        text_mode.SetText(state.ToString());
-    } */
-
-    public static float Round(float value, int digits)
-    {
-        float mult = Mathf.Pow(10.0f, (float)digits);
-        return Mathf.Round(value * mult) / mult;
     }
 }
