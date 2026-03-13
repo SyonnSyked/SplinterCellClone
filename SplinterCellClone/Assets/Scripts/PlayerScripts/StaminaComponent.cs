@@ -74,7 +74,7 @@ public class StaminaComponent : MonoBehaviour
     {
         GameManager.instance.playerStamBar.fillAmount = currentStamina / staminaPool;
 
-        Debug.Log("Calling Stam meter funciton!");
+       // Debug.Log("Calling Stam meter funciton!");
     }
 
 

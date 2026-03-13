@@ -4960,6 +4960,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2872631163919552366}
     - target: {fileID: 5833583321379544729, guid: 070781f41a5559f4b8310b8f13913fe3, type: 3}
+      propertyPath: interactPrompt
+      value: 
+      objectReference: {fileID: 7381005216088510909, guid: 264f7008f0571c24ab0274092bda4bbd, type: 3}
+    - target: {fileID: 5833583321379544729, guid: 070781f41a5559f4b8310b8f13913fe3, type: 3}
       propertyPath: playerDamageFlash
       value: 
       objectReference: {fileID: 5529680821370666894}
