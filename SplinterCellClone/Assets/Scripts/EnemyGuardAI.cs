@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public enum AIState { Patrol, Investigate, SearchForMissing, HighAlert }
 
-public class EnemyGuard : MonoBehaviour
+public class EnemyGuard : MonoBehaviour, iDamage
 {
     [Header("Movement Settings")]
     public Transform[] patrolWaypoints;
@@ -68,7 +68,7 @@ public class EnemyGuard : MonoBehaviour
         }
         else
         {
-            Debug.Log($"{gameObject.name}: Ignoring repeated distraction.");
+            Debug.Log($"{gameObject.name}: I already checked over there.");
         }
     }
 
@@ -126,7 +126,7 @@ public class EnemyGuard : MonoBehaviour
         {
             if (guard != this)
             {
-                // Alert nearby guards to the same location
+                // alert nearby guards to the same location
                 guard.ReceiveRadioAlert(transform.position);
             }
         }
@@ -172,7 +172,7 @@ public class EnemyGuard : MonoBehaviour
 
     }
 
-    public void TakeDamage(int amount)
+    public void takeDamage(int amount)
     {
         HP -= amount;
         agent.SetDestination(GameManager.instance.player.transform.position);
