@@ -51,7 +51,7 @@ MonoBehaviour:
   rb: {fileID: 457435952295600741}
   damageAmount: 20
   damageRate: 0
-  speed: 100
+  speed: 200
   destroyTime: 3
   hitEffect: {fileID: 0}
 --- !u!135 &1732336069044146181
