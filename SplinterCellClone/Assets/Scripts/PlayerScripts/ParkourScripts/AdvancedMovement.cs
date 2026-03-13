@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class AdvancedMovement : MonoBehaviour
 {
+    [Header("PlayerInput")]
+    [SerializeField] PlayerInputComponent playerInput;
+
     [Header("Movement")]
     private float moveSpeed;
     private float desiredMoveSpeed;
@@ -36,10 +40,6 @@ public class AdvancedMovement : MonoBehaviour
     public float crouchYScale;
     private float startYScale;
 
-    [Header("Keybinds")]
-    public KeyCode jumpKey = KeyCode.Space;
-    public KeyCode sprintKey = KeyCode.LeftShift;
-    public KeyCode crouchKey = KeyCode.LeftControl;
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -58,9 +58,8 @@ public class AdvancedMovement : MonoBehaviour
 
     public Transform orientation;
 
-    float horizontalInput;
-    float verticalInput;
 
+    Vector2 plrInput;
     Vector3 moveDirection;
 
     Rigidbody rb;
@@ -143,10 +142,11 @@ public class AdvancedMovement : MonoBehaviour
 
     private void MyInput()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
+        plrInput = playerInput.groundedMove.action.ReadValue<Vector2>();
+        moveDirection = orientation.forward * plrInput.y + orientation.right * plrInput.x;
+        moveDirection.y = 0f;
 
-        if (Input.GetKey(jumpKey) && readyToJump && grounded)
+        if (playerInput.jump.action.IsPressed() && readyToJump && grounded)
         {
             readyToJump = false;
 
@@ -155,17 +155,17 @@ public class AdvancedMovement : MonoBehaviour
             Invoke(nameof(ResetJump), jumpCooldown);
         }
 
-        if (Input.GetKeyDown(sprintKey) && grounded)
+        if (playerInput.sprint.action.IsPressed() && grounded)
         {
             sprinting = true;
         }
 
-        if (Input.GetKeyUp(sprintKey) && grounded)
+        if (!playerInput.sprint.action.IsPressed() && grounded)
         {
             sprinting = false;
         }
 
-        if (Input.GetKeyDown(crouchKey) && horizontalInput == 0 && verticalInput == 0)
+        if (playerInput.crouch.action.IsPressed() && moveDirection == Vector3.zero)
         {
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
             rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
@@ -173,7 +173,7 @@ public class AdvancedMovement : MonoBehaviour
             crouching = true;
         }
 
-        if (Input.GetKeyUp(crouchKey))
+        if (!playerInput.crouch.action.IsPressed())
         {
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
 
@@ -313,8 +313,6 @@ public class AdvancedMovement : MonoBehaviour
         if (climbingScript.exitingWall) return;
         if (restricted) return;
 
-        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-
         if (OnSlope() && !exitingSlope)
         {
             rb.AddForce(GetSlopeMoveDirection(moveDirection) * moveSpeed * 20f, ForceMode.Force);
@@ -348,14 +346,29 @@ public class AdvancedMovement : MonoBehaviour
 
     private void HandleStaminaEmpty()
     {
-        if (staminaComponent.GetCurrentStamina() <= 0)
+        if (!staminaComponent.HasStamina())
         {
-            sprinting = false;
-            wallrunning = false;
-            climbing = false;
+            DisableParkour();
+        }
+        else if (staminaComponent.HasStamina())
+        {
+            EnableParkour();
         }
     }
 
+    private void DisableParkour()
+    {
+            playerInput.sprint.action.Disable();
+            playerInput.climb.action.Disable();
+            playerInput.wallRun.action.Disable();
+    }
+
+    private void EnableParkour()
+    { 
+            playerInput.sprint.action.Enable();
+            playerInput.climb.action.Enable();
+            playerInput.wallRun.action.Enable();
+    }
 
     private void SpeedControl()
     {
