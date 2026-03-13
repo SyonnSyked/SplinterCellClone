@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuOptions;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
+    [SerializeField] GameObject interactPrompt;
     [SerializeField] TMP_Text enemyCountText;
     [SerializeField] TMP_Text intelText;
     
@@ -126,5 +127,12 @@ public class GameManager : MonoBehaviour
             menuActive.SetActive(true);
         }
     }
+
+    public void showInteractPrompt(bool show)
+    {
+        interactPrompt.SetActive(show);
+    }
+
+
 }
 
