@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
         instance = this;
         timeScaleOriginal = Time.timeScale;
 
-        player = GameObject.FindWithTag("Player");
+        //player = GameObject.FindWithTag("Player");
     }
 
     // Update is called once per frame
