@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Enemy
+  - Body
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - Enemies
   - PlayerBullets
   - EnemyBullets
-  - 
+  - Body
   - 
   - 
   - 
