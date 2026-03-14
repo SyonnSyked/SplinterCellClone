@@ -16,21 +16,14 @@ public class ExitGate : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerInExit && CheckWinCondition())
-        {
-            GameManager.instance.CheckWin();
-        }
-        else if (playerInExit && !CheckWinCondition())
-        {
-            Debug.Log("Win Conditions Not Met");
-        }
+        
     }
 
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
-            playerInExit = true;
+            GameManager.instance.CheckWin();
     }
 
     private void OnTriggerExit(Collider other)
