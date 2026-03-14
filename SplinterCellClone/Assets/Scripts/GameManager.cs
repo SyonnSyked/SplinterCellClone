@@ -41,8 +41,6 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         timeScaleOriginal = Time.timeScale;
-
-        player = GameObject.FindWithTag("Player");
     }
 
     // Update is called once per frame
@@ -131,7 +129,9 @@ public class GameManager : MonoBehaviour
 
     public void showInteractPrompt(bool show)
     {
+       /* menuActive = interactPrompt;
         interactPrompt.SetActive(show);
+       */
     }
 
 

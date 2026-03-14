@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 933423313177380146}
   - component: {fileID: 2175576354251006003}
   - component: {fileID: 5583104511747034993}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: P1_EnemyRoot
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -309,7 +309,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 52876145033835039, guid: cf618f2e1dd35ed4289c4fd5121cecb9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.5
+      value: -0.383
       objectReference: {fileID: 0}
     - target: {fileID: 52876145033835039, guid: cf618f2e1dd35ed4289c4fd5121cecb9, type: 3}
       propertyPath: m_LocalPosition.y

@@ -1,4 +1,3 @@
-using UnityEditor.Build.Content;
 using UnityEngine;
 
 public class HealthComponent : MonoBehaviour, iDamage

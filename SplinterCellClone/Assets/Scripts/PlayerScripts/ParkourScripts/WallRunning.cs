@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class WallRunning : MonoBehaviour
 {
+    [Header("PlayerInput")]
+    [SerializeField] PlayerInputComponent playerInput;
+
+
     [Header("Wallrunning")]
     public LayerMask whatIsWall;
     public LayerMask whatIsGround;
