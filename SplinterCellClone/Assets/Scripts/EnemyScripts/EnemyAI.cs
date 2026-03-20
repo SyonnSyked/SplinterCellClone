@@ -47,6 +47,8 @@ public class EnemyAI : MonoBehaviour, iDamage
         GameManager.instance.UpdateEnemyCount(1);
         stoppingDistanceOrig = agent.stoppingDistance;
         startingPos = transform.position;
+
+        Debug.Log(GameManager.instance.player.ToString());
     }
 
     void Update()

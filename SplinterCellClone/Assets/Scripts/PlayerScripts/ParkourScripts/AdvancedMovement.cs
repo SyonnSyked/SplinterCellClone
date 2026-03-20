@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class AdvancedMovement : MonoBehaviour
 {
+    [Header("PlayerInput")]
+    [SerializeField] PlayerInputComponent playerInput;
+
     [Header("Movement")]
     private float moveSpeed;
     private float desiredMoveSpeed;
@@ -17,6 +21,8 @@ public class AdvancedMovement : MonoBehaviour
     public float climbSpeed;
     public float vaultSpeed;
     public float airMinSpeed;
+
+    [SerializeField] StaminaComponent staminaComponent;
 
     public float speedIncreaseMultiplier;
     public float slopeIncreaseMultiplier;
@@ -34,10 +40,6 @@ public class AdvancedMovement : MonoBehaviour
     public float crouchYScale;
     private float startYScale;
 
-    [Header("Keybinds")]
-    public KeyCode jumpKey = KeyCode.Space;
-    public KeyCode sprintKey = KeyCode.LeftShift;
-    public KeyCode crouchKey = KeyCode.LeftControl;
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -56,9 +58,8 @@ public class AdvancedMovement : MonoBehaviour
 
     public Transform orientation;
 
-    float horizontalInput;
-    float verticalInput;
 
+    Vector2 plrInput;
     Vector3 moveDirection;
 
     Rigidbody rb;
@@ -78,6 +79,8 @@ public class AdvancedMovement : MonoBehaviour
         air
     }
 
+    public bool usingStamina;
+    public bool sprinting;
     public bool sliding;
     public bool crouching;
     public bool wallrunning;
@@ -122,6 +125,8 @@ public class AdvancedMovement : MonoBehaviour
         MyInput();
         SpeedControl();
         StateHandler();
+        PlayerUsingStamina();
+        HandleStaminaEmpty();
         //TextStuff();
 
         if (grounded)
@@ -137,10 +142,11 @@ public class AdvancedMovement : MonoBehaviour
 
     private void MyInput()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
+        plrInput = playerInput.groundedMove.action.ReadValue<Vector2>();
+        moveDirection = orientation.forward * plrInput.y + orientation.right * plrInput.x;
+        moveDirection.y = 0f;
 
-        if (Input.GetKey(jumpKey) && readyToJump && grounded)
+        if (playerInput.jump.action.IsPressed() && readyToJump && grounded)
         {
             readyToJump = false;
 
@@ -149,7 +155,17 @@ public class AdvancedMovement : MonoBehaviour
             Invoke(nameof(ResetJump), jumpCooldown);
         }
 
-        if (Input.GetKeyDown(crouchKey) && horizontalInput == 0 && verticalInput == 0)
+        if (playerInput.sprint.action.IsPressed() && grounded)
+        {
+            sprinting = true;
+        }
+
+        if (!playerInput.sprint.action.IsPressed() && grounded)
+        {
+            sprinting = false;
+        }
+
+        if (playerInput.crouch.action.IsPressed() && moveDirection == Vector3.zero)
         {
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
             rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
@@ -157,7 +173,7 @@ public class AdvancedMovement : MonoBehaviour
             crouching = true;
         }
 
-        if (Input.GetKeyUp(crouchKey))
+        if (!playerInput.crouch.action.IsPressed())
         {
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
 
@@ -191,12 +207,14 @@ public class AdvancedMovement : MonoBehaviour
         {
             state = MovementState.climbing;
             desiredMoveSpeed = climbSpeed;
+            usingStamina = true;
         }
 
         else if (wallrunning)
         {
             state = MovementState.wallrunning;
             desiredMoveSpeed = wallrunSpeed;
+            usingStamina = true;
         }
 
         else if (sliding)
@@ -218,23 +236,27 @@ public class AdvancedMovement : MonoBehaviour
         {
             state = MovementState.crouching;
             desiredMoveSpeed = crouchSpeed;
+            usingStamina = false;
         }
 
-        else if (grounded && Input.GetKey(sprintKey))
+        else if (sprinting)
         {
             state = MovementState.sprinting;
             desiredMoveSpeed = sprintSpeed;
+            usingStamina = true;
         }
 
-        else if (grounded)
+        else if (grounded && !sprinting)
         {
             state = MovementState.walking;
             desiredMoveSpeed = walkSpeed;
+            usingStamina = false;
         }
 
         else
         {
             state = MovementState.air;
+            usingStamina = false;
 
             if (moveSpeed < airMinSpeed)
                 desiredMoveSpeed = airMinSpeed;
@@ -291,8 +313,6 @@ public class AdvancedMovement : MonoBehaviour
         if (climbingScript.exitingWall) return;
         if (restricted) return;
 
-        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-
         if (OnSlope() && !exitingSlope)
         {
             rb.AddForce(GetSlopeMoveDirection(moveDirection) * moveSpeed * 20f, ForceMode.Force);
@@ -309,6 +329,45 @@ public class AdvancedMovement : MonoBehaviour
 
         // turn gravity off while on slope
         if (!wallrunning) rb.useGravity = !OnSlope();
+    }
+
+    private bool PlayerUsingStamina()
+    {
+        if (usingStamina)
+        {
+            staminaComponent.SetUsingStamina(true);
+
+            return true;
+        }
+
+        staminaComponent.SetUsingStamina(false);
+        return false;
+    }
+
+    private void HandleStaminaEmpty()
+    {
+        if (!staminaComponent.HasStamina())
+        {
+            DisableParkour();
+        }
+        else if (staminaComponent.HasStamina())
+        {
+            EnableParkour();
+        }
+    }
+
+    private void DisableParkour()
+    {
+            playerInput.sprint.action.Disable();
+            playerInput.climb.action.Disable();
+            playerInput.wallRun.action.Disable();
+    }
+
+    private void EnableParkour()
+    { 
+            playerInput.sprint.action.Enable();
+            playerInput.climb.action.Enable();
+            playerInput.wallRun.action.Enable();
     }
 
     private void SpeedControl()
@@ -360,24 +419,5 @@ public class AdvancedMovement : MonoBehaviour
     public Vector3 GetSlopeMoveDirection(Vector3 direction)
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
-    }
-
-  /*  private void TextStuff()
-    {
-        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-
-        if (OnSlope())
-            text_speed.SetText("Speed: " + Round(rb.linearVelocity.magnitude, 1) + " / " + Round(moveSpeed, 1));
-
-        else
-            text_speed.SetText("Speed: " + Round(flatVel.magnitude, 1) + " / " + Round(moveSpeed, 1));
-
-        text_mode.SetText(state.ToString());
-    } */
-
-    public static float Round(float value, int digits)
-    {
-        float mult = Mathf.Pow(10.0f, (float)digits);
-        return Mathf.Round(value * mult) / mult;
     }
 }

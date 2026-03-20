@@ -13,10 +13,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuOptions;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
+    [SerializeField] GameObject interactPrompt;
     [SerializeField] TMP_Text enemyCountText;
     [SerializeField] TMP_Text intelText;
     
     public Image playerHPBar;
+    public Image playerStamBar;
 
     public GameObject playerDamageFlash;
 
@@ -39,8 +41,6 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         timeScaleOriginal = Time.timeScale;
-
-        player = GameObject.FindWithTag("Player");
     }
 
     // Update is called once per frame
@@ -126,5 +126,14 @@ public class GameManager : MonoBehaviour
             menuActive.SetActive(true);
         }
     }
+
+    public void showInteractPrompt(bool show)
+    {
+       /* menuActive = interactPrompt;
+        interactPrompt.SetActive(show);
+       */
+    }
+
+
 }
 
