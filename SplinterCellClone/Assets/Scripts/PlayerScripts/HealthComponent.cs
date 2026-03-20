@@ -2,14 +2,12 @@ using UnityEngine;
 
 public class HealthComponent : MonoBehaviour, iDamage
 {
-    
+
+    [Header("----Components----")]
+    [SerializeField] ParticleSystem hitEffect;
 
     [Header("----Stats----")]
     [Range(0, 100)][SerializeField] int HP;
-
-
-    
-
 
     int HPOriginal;
 
@@ -27,6 +25,11 @@ public class HealthComponent : MonoBehaviour, iDamage
         HP -= amount;
 
         UpdatePlayerHealth();
+
+        if (hitEffect != null)
+        {
+            Instantiate(hitEffect, gameObject.transform.position, Quaternion.identity);
+        }
 
         if (HP <= 0)
         {

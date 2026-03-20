@@ -7,6 +7,7 @@ public class ShootingComponent : MonoBehaviour, iPickup
 {
     [Header("----Components----")]
     [SerializeField] LayerMask ignoreLayer;
+    [SerializeField] PlayerInputComponent playerInput;
 
     [Header("----Guns----")]
     [SerializeField] List<GunStats> gunList = new List<GunStats>();
@@ -67,7 +68,7 @@ public class ShootingComponent : MonoBehaviour, iPickup
     void Shoot()
     {
         shootTimer = 0;
-
+        gunList[gunListPos].currentAmmo--;
         Instantiate(bullet, shootPos.position, gunPivot.transform.rotation);
     }
 
@@ -100,6 +101,22 @@ public class ShootingComponent : MonoBehaviour, iPickup
         else if (Input.GetAxis("Mouse ScrollWheel") < 0 && gunListPos > 0)
         {
             gunListPos--;
+            ChangeGun();
+        }
+
+        if (playerInput.weapon1.action.IsPressed())
+        {
+            gunListPos = 0;
+            ChangeGun();
+        }
+        else if (playerInput.weapon2.action.IsPressed())
+        {
+            gunListPos = 1;
+            ChangeGun();
+        }
+        else if (playerInput.weapon3.action.IsPressed())
+        {
+            gunListPos = 2;
             ChangeGun();
         }
     }

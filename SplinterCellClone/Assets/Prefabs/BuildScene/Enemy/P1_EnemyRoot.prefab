@@ -165,6 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   model: {fileID: 8508705654579999006}
   agent: {fileID: 2175576354251006003}
+  hitEffect: {fileID: 5026516801123665142, guid: 488f758cc7050e140b20f38d42e1c172, type: 3}
   HP: 50
   faceTargetSpeed: 5
   gunRotateSpeed: 5
