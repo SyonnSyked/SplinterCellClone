@@ -9,10 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3781109169492344216}
-  - component: {fileID: 8585460629450676004}
   - component: {fileID: 1625957450480163864}
   - component: {fileID: 7299586340688959456}
-  - component: {fileID: 1076375951488775715}
   m_Layer: 0
   m_Name: ThompsonM1A1
   m_TagString: Untagged
@@ -34,21 +32,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8963142944569583941}
+  - {fileID: 873600178903426167}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8585460629450676004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 579552658337864936}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 336a8aa62bd19d64a9eae117da6e0601, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GunPickup
-  gun: {fileID: 11400000, guid: 7012bb65b0a04e54a895d0687329e531, type: 2}
 --- !u!33 &1625957450480163864
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -106,13 +92,59 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &1076375951488775715
+--- !u!1 &7838450588698944346
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 873600178903426167}
+  - component: {fileID: 4972614868673314986}
+  - component: {fileID: 2270697173324706955}
+  m_Layer: 16
+  m_Name: PickupNode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &873600178903426167
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7838450588698944346}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3781109169492344216}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4972614868673314986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7838450588698944346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 336a8aa62bd19d64a9eae117da6e0601, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GunPickup
+  gun: {fileID: 11400000, guid: 7012bb65b0a04e54a895d0687329e531, type: 2}
+--- !u!135 &2270697173324706955
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 579552658337864936}
+  m_GameObject: {fileID: 7838450588698944346}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

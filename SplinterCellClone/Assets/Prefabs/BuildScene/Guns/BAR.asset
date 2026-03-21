@@ -18,7 +18,7 @@ MonoBehaviour:
   isAutomatic: 1
   currentAmmo: 25
   maxAmmo: 25
-  gunModel: {fileID: 5571641588984482722, guid: c303a18f1cbdd4156b139b9e5b35d6a9, type: 3}
-  hitEffect: {fileID: 0}
+  gunModel: {fileID: 5893935331636197208, guid: 0d57c7f765c6bae4fb56439460ad6bc0, type: 3}
+  shootPos: {fileID: 9034195240007480518, guid: 66b2997b998de9c44a0b9e8c3dd5759a, type: 3}
   audioClips: []
   audioVolume: 0
