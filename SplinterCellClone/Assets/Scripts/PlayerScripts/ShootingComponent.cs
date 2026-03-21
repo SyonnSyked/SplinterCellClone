@@ -69,7 +69,7 @@ public class ShootingComponent : MonoBehaviour, iPickup
     {
         shootTimer = 0;
         gunList[gunListPos].currentAmmo--;
-        Instantiate(bullet, shootPos.position, gunPivot.transform.rotation);
+        Instantiate(bullet, shootPos.forward, gunPivot.transform.rotation);
     }
 
 
@@ -85,10 +85,17 @@ public class ShootingComponent : MonoBehaviour, iPickup
         shootDamage = gunList[gunListPos].damage;
         shootRate = gunList[gunListPos].rateOfFire;
         shootDistance = gunList[gunListPos].range;
-        isAutomatic = gunList[gunListPos].isAutomatic; 
+        isAutomatic = gunList[gunListPos].isAutomatic;
+        
 
+        gameObject.GetComponent<ShootingComponent>().gunModel = gunList[gunListPos].gunModel;
+        shootPos = gameObject.GetComponent<ShootingComponent>().gunModel.GetComponentInChildren<Transform>();
+
+
+/*
         gunModel.GetComponent<MeshFilter>().sharedMesh = gunList[gunListPos].gunModel.GetComponent<MeshFilter>().sharedMesh;
         gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunList[gunListPos].gunModel.GetComponent<MeshRenderer>().sharedMaterial;
+*/
     }
 
     void SelectGun()

@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5970123614907364864
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6501073496041823516}
-  m_Layer: 0
-  m_Name: ShootPos
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6501073496041823516
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5970123614907364864}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.36}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6840631649323854866}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7480380059759480448
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,10 +203,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 5589997313915475153, guid: 29e3ff3cff779264d858ae602526873b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6501073496041823516}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 29e3ff3cff779264d858ae602526873b, type: 3}
 --- !u!1 &6171372474438940328 stripped
@@ -411,7 +377,7 @@ PrefabInstance:
     - target: {fileID: 2828009986064425099, guid: 33ee71859c7a9c44da1e8053a7d07f19, type: 3}
       propertyPath: hitEffect
       value: 
-      objectReference: {fileID: 5026516801123665142, guid: 488f758cc7050e140b20f38d42e1c172, type: 3}
+      objectReference: {fileID: 4133136451143477217, guid: 9625a7e574f931b4689c59adcc2da394, type: 3}
     - target: {fileID: 2993668747072367542, guid: 33ee71859c7a9c44da1e8053a7d07f19, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -529,6 +495,9 @@ MonoBehaviour:
   wallRun: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   wallJump: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   ledgeGrab: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  weapon1: {fileID: -6863155336675373702, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  weapon2: {fileID: 785440083166406765, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  weapon3: {fileID: -3646143866465313986, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!114 &8266544738111060604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -570,12 +539,14 @@ MonoBehaviour:
   ignoreLayer:
     serializedVersion: 2
     m_Bits: 0
-  gunList: []
+  playerInput: {fileID: 6074878914359534862}
+  gunList:
+  - {fileID: 0}
   shootDamage: 20
   shootDistance: 0
   shootRate: 0.3
   gunModel: {fileID: 6171372474438940328}
   bullet: {fileID: 328919941245513563, guid: ef32022a3d27ed84b977edb406a0f470, type: 3}
-  shootPos: {fileID: 6501073496041823516}
+  shootPos: {fileID: 0}
   gunPivot: {fileID: 956290167380315179}
   cameraPosition: {fileID: 1347149572788799187}
