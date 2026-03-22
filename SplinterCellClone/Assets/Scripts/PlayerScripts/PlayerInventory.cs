@@ -5,13 +5,13 @@ public class PlayerInventory : MonoBehaviour, iPickup
 {
     [SerializeField] InventoryComponent inventoryComponent;
 
-    int gunListPos;
-    int itemListPos;
+    public int gunListPos;
+    public int itemListPos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        InitializeInventory();
     }
 
     // Update is called once per frame
@@ -20,28 +20,32 @@ public class PlayerInventory : MonoBehaviour, iPickup
         
     }
 
+    public InventoryComponent GetPlayerInventory()
+    {
+        return inventoryComponent;
+    }
+
     private void InitializeInventory()
     {
-        inventoryComponent.Inventory.Add("GunList", new List<GameObject>());
         inventoryComponent.Inventory.Add("ItemList", new List<GameObject>());
+        itemListPos = 0;
+
+        inventoryComponent.EquippedGuns.Add("GunStats", new List<GunStats>());
+        gunListPos = 0;
     }
 
     public void AddItemToBag(GameObject obj)
     {
         if (obj != null)
         {
-            if (obj.CompareTag("Gun"))
-            {
-                inventoryComponent.Inventory["GunList"].Add(obj);
-                gunListPos++;
-            }
-            else if (obj.CompareTag("Item"))
-            {
-                inventoryComponent.Inventory["ItemList"].Add(obj);
-                itemListPos++; 
-            }
+            inventoryComponent.Inventory["ItemList"].Add(obj);
+            itemListPos = 1;
         }
     }
 
-
+    public void AddGunToList(GunStats gunStats)
+    {
+        inventoryComponent.EquippedGuns["GunStats"].Add(gunStats);
+        gunListPos = 1;
+    }
 }
