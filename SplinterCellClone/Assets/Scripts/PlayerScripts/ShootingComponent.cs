@@ -3,18 +3,20 @@ using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class ShootingComponent : MonoBehaviour, iPickup
+public class ShootingComponent : MonoBehaviour 
 {
     [Header("----Components----")]
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] PlayerInputComponent playerInput;
+    [SerializeField] PlayerInventory playerInventory;
 
     [Header("----Guns----")]
-    [SerializeField] List<GunStats> gunList = new List<GunStats>();
+    [SerializeField] List<GameObject> gunList = new List<GameObject>();
     [SerializeField] int shootDamage;
     [SerializeField] int shootDistance;
     [SerializeField] float shootRate;
     [SerializeField] GameObject gunModel;
+    [SerializeField] GunStats equippedGun;
     [SerializeField] GameObject bullet;
     [SerializeField] Transform shootPos;
     [SerializeField] Transform gunPivot;
@@ -68,37 +70,31 @@ public class ShootingComponent : MonoBehaviour, iPickup
     void Shoot()
     {
         shootTimer = 0;
-        gunList[gunListPos].currentAmmo--;
         Instantiate(bullet, shootPos.forward, gunPivot.transform.rotation);
     }
 
 
-    public void GetGunStats(GunStats gun)
-    {
-        gunList.Add(gun);
-        gunListPos = gunList.Count - 1;
-        ChangeGun();
-    }
 
     void ChangeGun()
     { 
-        shootDamage = gunList[gunListPos].damage;
-        shootRate = gunList[gunListPos].rateOfFire;
-        shootDistance = gunList[gunListPos].range;
-        isAutomatic = gunList[gunListPos].isAutomatic;
+
+        shootDamage = equippedGun.damage;
+        shootRate = equippedGun.rateOfFire;
+        shootDistance = equippedGun.range;
+        isAutomatic = equippedGun.isAutomatic;
 
         
+        GameObject _gun = Instantiate(equippedGun.gunModel, gunModel.transform.position, Quaternion.identity);
 
 
-        gunModel.GetComponent<MeshFilter>().sharedMesh = gunList[gunListPos].gunModel.GetComponent<MeshFilter>().sharedMesh;
-        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunList[gunListPos].gunModel.GetComponent<MeshRenderer>().sharedMaterial;
-
-        shootPos.position = gunList[gunListPos].gunModel.GetComponentInChildren<Transform>().position;
+        shootPos.position = _gun.GetComponentInChildren<Transform>().position;
 
     }
 
     void SelectGun()
     {
+        ChangeGun();
+
         if (Input.GetAxis("Mouse ScrollWheel") > 0 && gunListPos < gunList.Count - 1)
         {
             gunListPos++;

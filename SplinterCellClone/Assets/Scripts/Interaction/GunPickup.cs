@@ -13,7 +13,7 @@ public class GunPickup : MonoBehaviour
 
             gun.currentAmmo = gun.maxAmmo;
 
-            pickup.GetGunStats(gun);
+            pickup.AddItemToBag(gun.gunModel);
             Destroy(gameObject);
         }
     }

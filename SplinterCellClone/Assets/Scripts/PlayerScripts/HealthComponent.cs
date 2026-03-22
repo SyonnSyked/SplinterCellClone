@@ -8,6 +8,7 @@ public class HealthComponent : MonoBehaviour, iDamage
 
     [Header("----Stats----")]
     [Range(0, 100)][SerializeField] int HP;
+    [Range(0, 100)][SerializeField] int maxHP;
 
     int HPOriginal;
 
@@ -15,7 +16,7 @@ public class HealthComponent : MonoBehaviour, iDamage
 
     void Start()
     {
-        HPOriginal = HP;
+        HPOriginal = maxHP;
         UpdatePlayerHealth();
     }
 
