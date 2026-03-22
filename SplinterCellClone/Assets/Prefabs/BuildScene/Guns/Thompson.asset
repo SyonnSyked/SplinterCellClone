@@ -20,5 +20,6 @@ MonoBehaviour:
   maxAmmo: 25
   gunModel: {fileID: 579552658337864936, guid: 149526219d24df34b8f888e7aed854a0, type: 3}
   shootPos: {fileID: 7645377791740338903, guid: f36ce206c0a84504d8effcdb93f52185, type: 3}
-  audioClips: []
+  audioClips:
+  - {fileID: 8300000, guid: 83dc36be77b709048898bee702c8dcb6, type: 3}
   audioVolume: 0

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GunPickup : MonoBehaviour
+public class GunPickup : MonoBehaviour, iGun
 {
     [SerializeField] GunStats gun;
     private void OnTriggerEnter(Collider other)
@@ -14,6 +14,7 @@ public class GunPickup : MonoBehaviour
             gun.currentAmmo = gun.maxAmmo;
 
             pickup.AddItemToBag(gun.gunModel);
+            pickup.AddGunToList(gun);
             Destroy(gameObject);
         }
     }

@@ -11,7 +11,7 @@ public class ShootingComponent : MonoBehaviour
     [SerializeField] PlayerInventory playerInventory;
 
     [Header("----Guns----")]
-    [SerializeField] List<GameObject> gunList = new List<GameObject>();
+    [SerializeField] List<GunStats> gunList = new List<GunStats>();
     [SerializeField] int shootDamage;
     [SerializeField] int shootDistance;
     [SerializeField] float shootRate;
@@ -24,6 +24,9 @@ public class ShootingComponent : MonoBehaviour
     [Header("----CameraData----")]
     [SerializeField] Transform cameraPosition;
 
+    [Header("----Audio----")]
+    [SerializeField] AudioSource audioPlayer;
+
     float shootTimer;
 
     bool isAutomatic;
@@ -34,7 +37,7 @@ public class ShootingComponent : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+       playerInventory.GetPlayerInventory().EquippedGuns.TryGetValue("GunStats", out gunList);
     }
 
     // Update is called once per frame
@@ -71,13 +74,16 @@ public class ShootingComponent : MonoBehaviour
     {
         shootTimer = 0;
         Instantiate(bullet, shootPos.forward, gunPivot.transform.rotation);
+        //audioPlayer.PlayOneShot();
     }
 
 
 
     void ChangeGun()
-    { 
+    {
+        gunListPos = playerInventory.gunListPos;
 
+        equippedGun = gunList[gunListPos];
         shootDamage = equippedGun.damage;
         shootRate = equippedGun.rateOfFire;
         shootDistance = equippedGun.range;
