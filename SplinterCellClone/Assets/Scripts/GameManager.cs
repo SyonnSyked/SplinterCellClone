@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject interactPrompt;
     [SerializeField] TMP_Text enemyCountText;
     [SerializeField] TMP_Text intelText;
+
+
+    [SerializeField] public GameObject checkpointPopup;
+    public GameObject playerSpawner;
     
     public Image playerHPBar;
     public Image playerStamBar;
@@ -41,6 +45,8 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         timeScaleOriginal = Time.timeScale;
+
+        GameManager.instance.playerSpawner = GameObject.FindWithTag("PlayerSpawner");
     }
 
     // Update is called once per frame
