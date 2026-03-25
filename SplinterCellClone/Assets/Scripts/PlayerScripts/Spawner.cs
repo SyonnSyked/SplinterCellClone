@@ -8,6 +8,10 @@ public class Spawner: MonoBehaviour
     [SerializeField] GameObject spawnPrefab;
     [SerializeField] int spawnLimit;
 
+    float spawnX;
+    float spawnY;
+    float spawnZ;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -24,7 +28,8 @@ public class Spawner: MonoBehaviour
 
     public void SpawnPlayer()
     {
-        Instantiate(spawnPrefab, spawnPos.position, spawnPos.rotation);
+        ZeroRotation();
+        Instantiate(spawnPrefab, spawnPos.position, Quaternion.Euler(spawnX, spawnY, spawnZ));
     }
 
     int GetEnemyCount()
@@ -32,6 +37,16 @@ public class Spawner: MonoBehaviour
         return GameManager.instance.enemyCount;
     }
 
+    public Transform GetSpawnPos()
+    { 
+        return spawnPos;
+    }
 
+    private void ZeroRotation()
+    { 
+        spawnX = 0;
+        spawnY = 0;
+        spawnZ = 0;
+    }
 
 }

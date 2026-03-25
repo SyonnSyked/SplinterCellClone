@@ -6,7 +6,7 @@ public class Checkpoint : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            GameManager.instance.playerSpawner.transform.position = transform.position;
+            GameManager.instance.playerSpawner.GetComponentInChildren<Spawner>().GetSpawnPos().position = GetComponentInChildren<Transform>().position;
             StartCoroutine(ShowPopup());
         }
     }
