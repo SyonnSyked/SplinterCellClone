@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GunPickup : MonoBehaviour, iGun
 {
-    [SerializeField] GunStats gun;
+    [SerializeField] public GunStats gun;
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Pickup Collider detected");

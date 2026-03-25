@@ -37,7 +37,6 @@ public class ShootingComponent : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-       playerInventory.GetPlayerInventory().EquippedGuns.TryGetValue("GunStats", out gunList);
     }
 
     // Update is called once per frame
@@ -89,12 +88,8 @@ public class ShootingComponent : MonoBehaviour
         shootDistance = equippedGun.range;
         isAutomatic = equippedGun.isAutomatic;
 
-        
-        GameObject _gun = Instantiate(equippedGun.gunModel, gunModel.transform.position, Quaternion.identity);
-
-
-        shootPos.position = _gun.GetComponentInChildren<Transform>().position;
-
+        gunModel.GetComponent<MeshFilter>().sharedMesh = gunList[gunListPos].GetComponent<MeshFilter>().sharedMesh;
+        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunList[gunListPos].GetComponent<MeshRenderer>().sharedMaterial;
     }
 
     void SelectGun()
@@ -103,28 +98,28 @@ public class ShootingComponent : MonoBehaviour
 
         if (Input.GetAxis("Mouse ScrollWheel") > 0 && gunListPos < gunList.Count - 1)
         {
-            gunListPos++;
+            playerInventory.gunListPos++;
             ChangeGun();
         }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0 && gunListPos > 0)
         {
-            gunListPos--;
+            playerInventory.gunListPos--;
             ChangeGun();
         }
 
         if (playerInput.weapon1.action.IsPressed())
         {
-            gunListPos = 0;
+            playerInventory.gunListPos = 0;
             ChangeGun();
         }
         else if (playerInput.weapon2.action.IsPressed())
         {
-            gunListPos = 1;
+            playerInventory.gunListPos = 1;
             ChangeGun();
         }
         else if (playerInput.weapon3.action.IsPressed())
         {
-            gunListPos = 2;
+            playerInventory.gunListPos = 2;
             ChangeGun();
         }
     }
