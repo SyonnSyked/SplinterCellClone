@@ -1,13 +1,18 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class HitMarkerSystem : MonoBehaviour
+public class hitMarkerSystem : MonoBehaviour
 {
 
-    public static HitMarkerSystem instance;
+    public static hitMarkerSystem instance;
 
     [SerializeField] Image hitMarker;
+
     [SerializeField] float hitMarkerTime = 0.2f;
+
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip hitSound;
+    [SerializeField] AudioClip headshotSound;
 
     float timer;
 
@@ -31,10 +36,22 @@ public class HitMarkerSystem : MonoBehaviour
     }
 
 
-    public void ShowHitMarker()
+    public void showHitMarker(bool isHeadshot)
     {
         hitMarker.enabled = true;
         timer = hitMarkerTime;
+
+        // color change
+        if (isHeadshot)
+            hitMarker.color = Color.red;
+        else
+            hitMarker.color = Color.white;
+
+        // sound
+        if (isHeadshot && headshotSound != null)
+            audioSource.PlayOneShot(headshotSound);
+        else if (hitSound != null)
+            audioSource.PlayOneShot(hitSound);
     }
 
 }
