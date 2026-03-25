@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Enemy
   - Body
+  - iPickup
+  - PlayerSpawner
+  - PlayerSpawnFlag
   layers:
   - Default
   - TransparentFX
@@ -24,6 +27,8 @@ TagManager:
   - EnemyBullets
   - Body
   - 
+  - GunCamFeed
+  - Pickups
   - 
   - 
   - 

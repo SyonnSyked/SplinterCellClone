@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bbbe796b6669fb428b129d5be164cf5, type: 3}
+  m_Name: M1Garand
+  m_EditorClassIdentifier: Assembly-CSharp::GunStats
+  damage: 25
+  range: 200
+  rateOfFire: 0.2
+  isAutomatic: 0
+  currentAmmo: 8
+  maxAmmo: 8
+  gunModel: {fileID: 4551639203208912920, guid: f75496d8798b33641be0c78c23e7976b, type: 3}
+  shootPos: {fileID: 3912861796573083643, guid: 3d5ae4130a7b53941b7e3dc7e8a1a808, type: 3}
+  audioClips:
+  - {fileID: 8300000, guid: 83dc36be77b709048898bee702c8dcb6, type: 3}
+  audioVolume: 0

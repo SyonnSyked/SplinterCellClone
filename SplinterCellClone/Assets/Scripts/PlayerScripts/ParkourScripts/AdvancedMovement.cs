@@ -135,6 +135,10 @@ public class AdvancedMovement : MonoBehaviour
             rb.linearDamping = 0;
     }
 
+
+
+    
+
     private void FixedUpdate()
     {
         MovePlayer();

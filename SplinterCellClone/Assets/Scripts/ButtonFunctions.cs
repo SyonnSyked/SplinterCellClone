@@ -1,5 +1,4 @@
 using System.Globalization;
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,7 +12,7 @@ public class ButtonFunctions : MonoBehaviour
 
     public void Restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameManager.instance.RespawnPlayer();
         GameManager.instance.StateUnpause();
     }
 
