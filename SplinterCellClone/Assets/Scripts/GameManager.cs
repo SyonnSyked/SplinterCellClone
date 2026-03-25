@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -16,6 +17,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject interactPrompt;
     [SerializeField] TMP_Text enemyCountText;
     [SerializeField] TMP_Text intelText;
+
+
+    [SerializeField] public GameObject checkpointPopup;
+    public GameObject playerSpawner;
     
     public Image playerHPBar;
     public Image playerStamBar;
@@ -41,6 +46,8 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         timeScaleOriginal = Time.timeScale;
+
+        GameManager.instance.playerSpawner = GameObject.FindWithTag("PlayerSpawner");
     }
 
     // Update is called once per frame
@@ -125,6 +132,24 @@ public class GameManager : MonoBehaviour
             menuActive = menuWin;
             menuActive.SetActive(true);
         }
+    }
+
+
+    public void RespawnPlayer()
+    {
+        StartCoroutine(StaggerDestroyAndRespawn());
+    }
+
+
+    IEnumerator StaggerDestroyAndRespawn()
+    {
+        if (player != null)
+        {
+            Destroy(player.gameObject);
+            yield return null;
+        }
+
+        playerSpawner.GetComponentInChildren<Spawner>().SpawnPlayer();
     }
 
     public void showInteractPrompt(bool show)

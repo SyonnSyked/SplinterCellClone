@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputComponent : MonoBehaviour
 {
+    [Header("----Movement----")]
     public InputActionReference groundedMove;
     public InputActionReference sprint;
     public InputActionReference jump;
@@ -13,6 +14,10 @@ public class PlayerInputComponent : MonoBehaviour
     public InputActionReference wallJump;
     public InputActionReference ledgeGrab;
 
+    [Header("----Combat----")]
+    public InputActionReference weapon1;
+    public InputActionReference weapon2;
+    public InputActionReference weapon3;
 
     private void OnEnable()
     {
@@ -25,6 +30,9 @@ public class PlayerInputComponent : MonoBehaviour
         wallRun.action.Enable();
         wallJump.action.Enable();
         ledgeGrab.action.Enable();
+        weapon1.action.Enable();
+        weapon2.action.Enable();
+        weapon3.action.Enable();
     }
 
     private void OnDisable()
@@ -38,6 +46,9 @@ public class PlayerInputComponent : MonoBehaviour
         wallRun.action.Disable();
         wallJump.action.Disable();
         ledgeGrab.action.Disable();
+        weapon1.action.Disable();
+        weapon2.action.Disable();
+        weapon3.action.Disable();
     }
 
 }
