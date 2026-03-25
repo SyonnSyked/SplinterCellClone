@@ -72,6 +72,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6050526366324280345, guid: 33ee71859c7a9c44da1e8053a7d07f19, type: 3}
+      propertyPath: m_TagString
+      value: PlayerShootingRoot
+      objectReference: {fileID: 0}
     - target: {fileID: 6445392268971222328, guid: 33ee71859c7a9c44da1e8053a7d07f19, type: 3}
       propertyPath: audioPlayer
       value: 

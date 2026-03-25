@@ -3,10 +3,18 @@ using UnityEngine;
 
 public class Damage : MonoBehaviour
 {
+    [Header("----ScriptReferences----")]
+    [SerializeField] EnemyAI lightEnemyScript;
+    [SerializeField] EnemyGuard guardEnemyScript;
+    [SerializeField] ShootingComponent playerShootingScript;
     enum damageType { bullet, stationary, DOT }
-    [SerializeField] damageType type;
+    enum entityType { light, guard, camera, player}
+
+    [SerializeField] damageType dmgType;
+    [SerializeField] entityType enType;
     [SerializeField] Rigidbody rb;
 
+    [SerializeField] GunStats gunStats;
     [SerializeField] int damageAmount;
     [SerializeField] float damageRate;
     [SerializeField] int speed;
@@ -19,11 +27,35 @@ public class Damage : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (type == damageType.bullet)
+        lightEnemyScript = GameManager.instance.lightEnemy.GetComponent<EnemyAI>();
+        guardEnemyScript = GameManager.instance.guardEnemy.GetComponent<EnemyGuard>();
+        playerShootingScript = GameManager.instance.playerShootingRoot.GetComponent<ShootingComponent>();
+
+        if (dmgType == damageType.bullet)
         {
+            switch (enType)
+            {
+                case entityType.light:
+                    gunStats = lightEnemyScript.GetGunStats();
+                    break;
+                    
+                case entityType.guard:
+                    gunStats = guardEnemyScript.GetGunStats();
+                    break;
+                case entityType.player:
+                    gunStats = playerShootingScript.GetGunStats();
+                    break;
+            }
+            SetBulletStats();
             rb.linearVelocity = transform.forward * speed;
             Destroy(gameObject, destroyTime);
         }
+    }
+
+
+    private void SetBulletStats()
+    {
+        damageAmount = gunStats.damage;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -34,12 +66,12 @@ public class Damage : MonoBehaviour
         }
 
         iDamage dmg = other.GetComponent<iDamage>();
-        if (dmg != null && type == damageType.DOT)
+        if (dmg != null && dmgType == damageType.DOT)
         {
             dmg.TakeDamage(damageAmount);
         }
 
-        if (dmg != null && type == damageType.bullet)
+        if (dmg != null && dmgType == damageType.bullet)
         {
             if (hitEffect != null)
             {
@@ -59,7 +91,7 @@ public class Damage : MonoBehaviour
         }
 
         iDamage dmg = other.GetComponent<iDamage>();
-        if (dmg != null && type == damageType.DOT && !isDamaging)
+        if (dmg != null && dmgType == damageType.DOT && !isDamaging)
         {
             StartCoroutine(damageOther(dmg));
         }

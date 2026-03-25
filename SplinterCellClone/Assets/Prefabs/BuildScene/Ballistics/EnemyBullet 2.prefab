@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 1732336069044146181}
   - component: {fileID: 2860919369765709281}
   - component: {fileID: 457435952295600741}
-  m_Layer: 13
-  m_Name: PlayerBullet
+  m_Layer: 14
+  m_Name: EnemyBullet 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,14 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74cc1f41aa94954459857c15d14a5f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Damage
-  lightEnemyScript: {fileID: 0}
-  guardEnemyScript: {fileID: 0}
-  playerShootingScript: {fileID: 0}
-  dmgType: 0
-  enType: 3
+  type: 0
   rb: {fileID: 457435952295600741}
-  gunStats: {fileID: 0}
-  damageAmount: 30
+  damageAmount: 20
   damageRate: 0
   speed: 200
   destroyTime: 3
@@ -78,7 +73,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.2
+  m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!96 &2860919369765709281
 TrailRenderer:

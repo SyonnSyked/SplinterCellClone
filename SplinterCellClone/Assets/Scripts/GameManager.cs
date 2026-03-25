@@ -19,6 +19,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text intelText;
 
 
+    [SerializeField] public GameObject lightEnemy;
+    [SerializeField] public GameObject guardEnemy;
+    [SerializeField] public GameObject playerShootingRoot;
+
+
+
     [SerializeField] public GameObject checkpointPopup;
     public GameObject playerSpawner;
     

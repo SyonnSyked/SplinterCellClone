@@ -67,7 +67,10 @@ public class ShootingComponent : MonoBehaviour
         }
     }
 
-
+    public GunStats GetGunStats()
+    {
+        return equippedGun;
+    }
     void Shoot()
     {
         shootTimer = 0;

@@ -5,9 +5,11 @@ TagManager:
   serializedVersion: 3
   tags:
   - Enemy
+  - Body
   - iPickup
   - PlayerSpawner
   - PlayerSpawnFlag
+  - PlayerShootingRoot
   layers:
   - Default
   - TransparentFX
@@ -24,10 +26,10 @@ TagManager:
   - Enemies
   - PlayerBullets
   - EnemyBullets
+  - Body
+  - 
   - GunCamFeed
   - Pickups
-  - 
-  - 
   - 
   - 
   - 

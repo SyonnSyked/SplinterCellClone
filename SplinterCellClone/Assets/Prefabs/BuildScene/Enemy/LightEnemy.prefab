@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 2175576354251006003}
   - component: {fileID: 5583104511747034993}
   m_Layer: 12
-  m_Name: P1_EnemyRoot
+  m_Name: LightEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -172,10 +172,10 @@ MonoBehaviour:
   FOV: 90
   roamDist: 40
   roamPauseTime: 3
+  equippedGun: {fileID: 11400000, guid: acdcfd2a84fb6c341ae8c6513e1ab702, type: 2}
   bullet: {fileID: 328919941245513563, guid: f2a609a577d003b4f84c1915bb25112c, type: 3}
   shootRate: 0.3
   shootPos: {fileID: 7550863735718717656}
-  gun: {fileID: 5106481117386324464, guid: b4d01bc533dae364f950d1fb291ebb9e, type: 3}
   gunPivot: {fileID: 7685717977561055151}
 --- !u!33 &2802266658203202863
 MeshFilter:
@@ -348,9 +348,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 205181904757843304, guid: cf618f2e1dd35ed4289c4fd5121cecb9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 205181904757843304, guid: cf618f2e1dd35ed4289c4fd5121cecb9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.32
+      objectReference: {fileID: 0}
+    - target: {fileID: 1214643358429861761, guid: cf618f2e1dd35ed4289c4fd5121cecb9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -6642371431653917376, guid: e23ab8f095718425c967ae1e8ad24cf5, type: 3}
+    - target: {fileID: 5008156378453951754, guid: cf618f2e1dd35ed4289c4fd5121cecb9, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b0d3df4c7db094c41be051881caee8d7, type: 2}
+    - target: {fileID: 5693916079537764137, guid: cf618f2e1dd35ed4289c4fd5121cecb9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5693916079537764137, guid: cf618f2e1dd35ed4289c4fd5121cecb9, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5693916079537764137, guid: cf618f2e1dd35ed4289c4fd5121cecb9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.512
+      value: 0.81
       objectReference: {fileID: 0}
     - target: {fileID: 7172778863872415347, guid: cf618f2e1dd35ed4289c4fd5121cecb9, type: 3}
       propertyPath: m_Name
