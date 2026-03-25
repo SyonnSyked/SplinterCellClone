@@ -9,6 +9,7 @@ public class EnemyAI : MonoBehaviour, iDamage
     [Header("----Components----")]
     [SerializeField] Renderer model;
     [SerializeField] NavMeshAgent agent;
+    [SerializeField] ParticleSystem hitEffect;
 
     Color colorOriginal;
 
@@ -171,6 +172,11 @@ public class EnemyAI : MonoBehaviour, iDamage
     public void TakeDamage(int amount)
     {
         HP -= amount;
+
+        if (hitEffect != null)
+        { 
+            Instantiate(hitEffect, gameObject.transform.position, Quaternion.identity);
+        }
 
         agent.SetDestination(GameManager.instance.player.transform.position);
 

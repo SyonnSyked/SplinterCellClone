@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - Enemy
+  - iPickup
+  - PlayerSpawner
+  - PlayerSpawnFlag
   layers:
   - Default
   - TransparentFX
@@ -21,8 +24,8 @@ TagManager:
   - Enemies
   - PlayerBullets
   - EnemyBullets
-  - 
-  - 
+  - GunCamFeed
+  - Pickups
   - 
   - 
   - 

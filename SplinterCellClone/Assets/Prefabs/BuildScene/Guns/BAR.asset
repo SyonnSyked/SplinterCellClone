@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bbbe796b6669fb428b129d5be164cf5, type: 3}
+  m_Name: BAR
+  m_EditorClassIdentifier: Assembly-CSharp::GunStats
+  damage: 40
+  range: 400
+  rateOfFire: 0.2
+  isAutomatic: 1
+  currentAmmo: 25
+  maxAmmo: 25
+  gunModel: {fileID: 5893935331636197208, guid: 0d57c7f765c6bae4fb56439460ad6bc0, type: 3}
+  shootPos: {fileID: 9034195240007480518, guid: 66b2997b998de9c44a0b9e8c3dd5759a, type: 3}
+  audioClips:
+  - {fileID: 8300000, guid: 83dc36be77b709048898bee702c8dcb6, type: 3}
+  audioVolume: 0
