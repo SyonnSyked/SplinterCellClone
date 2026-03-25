@@ -44,6 +44,21 @@ public class EnemyGuard : MonoBehaviour, iDamage
         allGuards.Add(this); // Registration for "Radio" communication
     }
 
+    void Start()
+    {
+        FindPlayer();
+    }
+
+    void OnDisable()
+    {
+        allGuards.Remove(this);
+    }
+
+    void OnDestroy()
+    {
+        allGuards.Remove(this);
+    }
+
     void Update()
     {
         switch (currentState)
@@ -58,6 +73,31 @@ public class EnemyGuard : MonoBehaviour, iDamage
                 agent.speed = 5.0f; // Run to player or body
                 AttackPlayer();
                 break;
+        }
+    }
+
+
+    void FindPlayer()
+    { 
+        if (GameManager.instance.player != null)
+            PlayerTransform = GameManager.instance.player.transform;
+    }
+
+
+    void TryDetectPlayer()
+    {
+        if (PlayerTransform == null)
+        {
+            return;
+        }
+
+        float distance = Vector3.Distance(transform.position, PlayerTransform.position);
+
+        if (distance <= detectionRange)
+        {
+            currentState = AIState.HighAlert;
+            hasLastKnownTargetPosition = true;
+            lastKnownTargetPosition = PlayerTransform.position;
         }
     }
 

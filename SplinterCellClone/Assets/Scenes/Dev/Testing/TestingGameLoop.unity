@@ -4784,7 +4784,7 @@ Transform:
   m_GameObject: {fileID: 1225169436}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 63.11, y: 16.19, z: -16.21}
+  m_LocalPosition: {x: 98.28, y: 5.27, z: 25.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7357,6 +7357,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5057657695097905389, guid: db8e061e6eb8d2b499ed1eb7b02de738, type: 3}
+      propertyPath: guardEnemy
+      value: 
+      objectReference: {fileID: 3508141880582707635, guid: bc21299cd52b7d448a99422a0668c50f, type: 3}
+    - target: {fileID: 5057657695097905389, guid: db8e061e6eb8d2b499ed1eb7b02de738, type: 3}
+      propertyPath: lightEnemy
+      value: 
+      objectReference: {fileID: 3643114304497057307, guid: 3f6e2aa6b403c174f9fd4ef0ddc3d24a, type: 3}
     - target: {fileID: 5057657695097905389, guid: db8e061e6eb8d2b499ed1eb7b02de738, type: 3}
       propertyPath: playerSpawner
       value: 

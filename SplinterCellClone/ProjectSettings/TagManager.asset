@@ -9,6 +9,7 @@ TagManager:
   - iPickup
   - PlayerSpawner
   - PlayerSpawnFlag
+  - PlayerShootingRoot
   layers:
   - Default
   - TransparentFX
@@ -29,8 +30,6 @@ TagManager:
   - 
   - GunCamFeed
   - Pickups
-  - 
-  - 
   - 
   - 
   - 
