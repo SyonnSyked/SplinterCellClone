@@ -3,10 +3,17 @@ using UnityEngine;
 
 public class Damage : MonoBehaviour
 {
+    [Header("----ScriptReferences----")]
+    [SerializeField] EnemyAI lightEnemyScript;
+    [SerializeField] EnemyGuard guardEnemyScript;
     enum damageType { bullet, stationary, DOT }
-    [SerializeField] damageType type;
+    enum enemyType { light, guard, camera}
+
+    [SerializeField] damageType dmgType;
+    [SerializeField] enemyType enType;
     [SerializeField] Rigidbody rb;
 
+    [SerializeField] GunStats gunStats;
     [SerializeField] int damageAmount;
     [SerializeField] float damageRate;
     [SerializeField] int speed;
@@ -19,8 +26,16 @@ public class Damage : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (type == damageType.bullet)
+        if (dmgType == damageType.bullet)
         {
+            if (enType == enemyType.light)
+            {
+                gunStats = lightEnemyScript.GetGunStats();
+            }
+            else if (enType == enemyType.guard)
+            {
+                gunStats = guardEnemyScript.GetGunStats();
+            }
             rb.linearVelocity = transform.forward * speed;
             Destroy(gameObject, destroyTime);
         }
@@ -34,12 +49,12 @@ public class Damage : MonoBehaviour
         }
 
         iDamage dmg = other.GetComponent<iDamage>();
-        if (dmg != null && type == damageType.DOT)
+        if (dmg != null && dmgType == damageType.DOT)
         {
             dmg.TakeDamage(damageAmount);
         }
 
-        if (dmg != null && type == damageType.bullet)
+        if (dmg != null && dmgType == damageType.bullet)
         {
             if (hitEffect != null)
             {
@@ -59,7 +74,7 @@ public class Damage : MonoBehaviour
         }
 
         iDamage dmg = other.GetComponent<iDamage>();
-        if (dmg != null && type == damageType.DOT && !isDamaging)
+        if (dmg != null && dmgType == damageType.DOT && !isDamaging)
         {
             StartCoroutine(damageOther(dmg));
         }

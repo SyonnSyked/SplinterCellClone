@@ -19,6 +19,12 @@ public class EnemyGuard : MonoBehaviour, iDamage
     public const float BUDDY_MISSING_THRESHOLD = 30f;
 
     [Header("Combat Settings")]
+    [SerializeField] GunStats equippedGun;
+    [SerializeField] GameObject bullet;
+    [SerializeField] Transform shootPos;
+    [SerializeField] Transform gunPivot;
+    float shootTimer;
+
     [SerializeField] int HP;
     public float AttackRange = 2.0f;
     public float AttackCooldown = 1.5f;
@@ -53,6 +59,11 @@ public class EnemyGuard : MonoBehaviour, iDamage
                 AttackPlayer();
                 break;
         }
+    }
+
+    public GunStats GetGunStats()
+    {
+        return equippedGun;
     }
 
     public void OnHearNoise(Vector3 location)
@@ -166,9 +177,16 @@ public class EnemyGuard : MonoBehaviour, iDamage
         }
     }
 
+    void Shoot()
+    {
+        shootTimer = 0;
+        Instantiate(bullet, shootPos.position, gunPivot.transform.rotation);
+    }
+
     void Attack()
     {
         Debug.Log($"{gameObject.name} attack!");
+        Shoot();
     }
 
     public void TakeDamage(int amount)
