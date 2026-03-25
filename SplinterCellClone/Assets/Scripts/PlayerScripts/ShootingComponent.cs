@@ -71,7 +71,7 @@ public class ShootingComponent : MonoBehaviour
     void Shoot()
     {
         shootTimer = 0;
-        Instantiate(bullet, shootPos.forward, gunPivot.transform.rotation);
+        Instantiate(bullet, shootPos.position, gunPivot.transform.rotation);
         //audioPlayer.PlayOneShot();
     }
 
