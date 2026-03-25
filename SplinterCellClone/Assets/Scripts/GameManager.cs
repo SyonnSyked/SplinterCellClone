@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -131,6 +132,24 @@ public class GameManager : MonoBehaviour
             menuActive = menuWin;
             menuActive.SetActive(true);
         }
+    }
+
+
+    public void RespawnPlayer()
+    {
+        StartCoroutine(StaggerDestroyAndRespawn());
+    }
+
+
+    IEnumerator StaggerDestroyAndRespawn()
+    {
+        if (player != null)
+        {
+            Destroy(player.gameObject);
+            yield return null;
+        }
+
+        playerSpawner.GetComponentInChildren<Spawner>().SpawnPlayer();
     }
 
     public void showInteractPrompt(bool show)

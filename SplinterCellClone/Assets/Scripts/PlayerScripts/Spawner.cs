@@ -12,13 +12,19 @@ public class Spawner: MonoBehaviour
     void Start()
     {
         if (!GameObject.FindWithTag("PlayerSpawnFlag"))
-            Instantiate(spawnPrefab, spawnPos, false);
+            SpawnPlayer();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+
+    public void SpawnPlayer()
+    {
+        Instantiate(spawnPrefab, spawnPos.position, spawnPos.rotation);
     }
 
     int GetEnemyCount()
