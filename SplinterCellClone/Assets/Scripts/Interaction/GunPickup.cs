@@ -6,6 +6,8 @@ public class GunPickup : MonoBehaviour, iGun
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Pickup Collider detected");
+        Debug.Log(other);
+        Debug.Log(other.gameObject);
         iPickup pickup = other.GetComponent<iPickup>();
         if (pickup != null)
 

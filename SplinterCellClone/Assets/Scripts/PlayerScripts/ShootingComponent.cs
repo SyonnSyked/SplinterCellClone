@@ -11,7 +11,6 @@ public class ShootingComponent : MonoBehaviour
     [SerializeField] PlayerInventory playerInventory;
 
     [Header("----Guns----")]
-    [SerializeField] List<GunStats> gunList = new List<GunStats>();
     [SerializeField] int shootDamage;
     [SerializeField] int shootDistance;
     [SerializeField] float shootRate;
@@ -31,12 +30,12 @@ public class ShootingComponent : MonoBehaviour
 
     bool isAutomatic;
 
-    int gunListPos;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        playerInventory.gunListPos = 0;
     }
 
     // Update is called once per frame
@@ -80,28 +79,31 @@ public class ShootingComponent : MonoBehaviour
 
     void ChangeGun()
     {
-        gunListPos = playerInventory.gunListPos;
-
-        equippedGun = gunList[gunListPos];
+        equippedGun = playerInventory.playerGuns[playerInventory.gunListPos];
         shootDamage = equippedGun.damage;
         shootRate = equippedGun.rateOfFire;
         shootDistance = equippedGun.range;
         isAutomatic = equippedGun.isAutomatic;
 
-        gunModel.GetComponent<MeshFilter>().sharedMesh = gunList[gunListPos].GetComponent<MeshFilter>().sharedMesh;
-        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunList[gunListPos].GetComponent<MeshRenderer>().sharedMaterial;
+        gunModel.GetComponent<MeshFilter>().sharedMesh = playerInventory.playerInv[playerInventory.gunListPos].GetComponent<MeshFilter>().sharedMesh;
+        gunModel.GetComponent<MeshRenderer>().sharedMaterial = playerInventory.playerInv[playerInventory.gunListPos].GetComponent<MeshRenderer>().sharedMaterial;
     }
 
     void SelectGun()
     {
+        if (playerInventory.playerGuns.Count == 0 || playerInventory.playerInv.Count == 0)
+            return;
+
+        playerInventory.gunListPos = Mathf.Clamp(playerInventory.gunListPos, 0, playerInventory.playerGuns.Count - 1);
+
         ChangeGun();
 
-        if (Input.GetAxis("Mouse ScrollWheel") > 0 && gunListPos < gunList.Count - 1)
+        if (Input.GetAxis("Mouse ScrollWheel") > 0 && playerInventory.gunListPos < playerInventory.playerGuns.Count - 1)
         {
             playerInventory.gunListPos++;
             ChangeGun();
         }
-        else if (Input.GetAxis("Mouse ScrollWheel") < 0 && gunListPos > 0)
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0 && playerInventory.gunListPos > 0)
         {
             playerInventory.gunListPos--;
             ChangeGun();

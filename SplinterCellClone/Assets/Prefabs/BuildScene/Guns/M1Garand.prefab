@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2821855680203186363, guid: 1a058bfb15373824dbf8e3a5eb2898d3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 58.606346
+      value: 16.182775
       objectReference: {fileID: 0}
     - target: {fileID: 2821855680203186363, guid: 1a058bfb15373824dbf8e3a5eb2898d3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.69779545
+      value: 0.82
       objectReference: {fileID: 0}
     - target: {fileID: 2821855680203186363, guid: 1a058bfb15373824dbf8e3a5eb2898d3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 67.61239
+      value: -21.239813
       objectReference: {fileID: 0}
     - target: {fileID: 2821855680203186363, guid: 1a058bfb15373824dbf8e3a5eb2898d3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -57,7 +57,53 @@ PrefabInstance:
       value: 16
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7606086094393919493, guid: 1a058bfb15373824dbf8e3a5eb2898d3, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5749220761075312633, guid: 1a058bfb15373824dbf8e3a5eb2898d3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8052910528737128241}
+    - targetCorrespondingSourceObject: {fileID: 5749220761075312633, guid: 1a058bfb15373824dbf8e3a5eb2898d3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7994386129731395911}
   m_SourcePrefab: {fileID: 100100000, guid: 1a058bfb15373824dbf8e3a5eb2898d3, type: 3}
+--- !u!1 &4551639203208912920 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5749220761075312633, guid: 1a058bfb15373824dbf8e3a5eb2898d3, type: 3}
+  m_PrefabInstance: {fileID: 8134625104961439713}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8052910528737128241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4551639203208912920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 336a8aa62bd19d64a9eae117da6e0601, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GunPickup
+  gun: {fileID: 11400000, guid: acdcfd2a84fb6c341ae8c6513e1ab702, type: 2}
+--- !u!135 &7994386129731395911
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4551639203208912920}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.5
+  m_Center: {x: 0, y: 0, z: 0}
