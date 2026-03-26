@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 24.67505, y: 0, z: -21.07895}
-  m_LocalScale: {x: 5, y: 1, z: 5}
+  m_LocalScale: {x: 50, y: 1, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -47,8 +47,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74cc1f41aa94954459857c15d14a5f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Damage
-  type: 2
+  lightEnemyScript: {fileID: 0}
+  guardEnemyScript: {fileID: 0}
+  playerShootingScript: {fileID: 0}
+  dmgType: 2
+  enType: 4
   rb: {fileID: 0}
+  gunStats: {fileID: 0}
   damageAmount: 2
   damageRate: 0.3
   speed: 0

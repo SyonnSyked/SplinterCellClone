@@ -18,6 +18,7 @@ public class PlayerInputComponent : MonoBehaviour
     public InputActionReference weapon1;
     public InputActionReference weapon2;
     public InputActionReference weapon3;
+    public InputActionReference reload;
 
     private void OnEnable()
     {
@@ -33,6 +34,7 @@ public class PlayerInputComponent : MonoBehaviour
         weapon1.action.Enable();
         weapon2.action.Enable();
         weapon3.action.Enable();
+        reload.action.Enable();
     }
 
     private void OnDisable()
@@ -49,6 +51,7 @@ public class PlayerInputComponent : MonoBehaviour
         weapon1.action.Disable();
         weapon2.action.Disable();
         weapon3.action.Disable();
+        reload.action.Disable();
     }
 
 }

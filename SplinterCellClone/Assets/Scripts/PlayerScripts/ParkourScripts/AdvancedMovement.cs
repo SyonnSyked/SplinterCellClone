@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 public class AdvancedMovement : MonoBehaviour
 {
@@ -58,6 +59,22 @@ public class AdvancedMovement : MonoBehaviour
 
     public Transform orientation;
 
+    [Header("~~~~~~Audio~~~~~")]
+    [SerializeField] AudioSource aud;
+
+    [SerializeField] List<AudioClip> audJump = new List<AudioClip>();
+    [SerializeField] float audJumpVol;
+
+    [SerializeField] List<AudioClip> audStep = new List<AudioClip>();
+    [SerializeField] float audStepVol;
+
+    [Header("~~~~~~Step Timing~~~~~")]
+    [SerializeField] float walkStepInterval;
+    [SerializeField] float sprintStepInterval;
+
+
+    bool isPlayingStep;
+    bool isSprinting;
 
     Vector2 plrInput;
     Vector3 moveDirection;
@@ -133,16 +150,53 @@ public class AdvancedMovement : MonoBehaviour
             rb.linearDamping = groundDrag;
         else
             rb.linearDamping = 0;
+
+    }
+
+    private void HandleSteps()
+    {
+        
+        bool isMoving = grounded && rb.linearVelocity.magnitude > 0.1f;
+
+        if (!isMoving)
+        {
+            isPlayingStep = false;
+            return;
+        }
+
+        if (state == MovementState.walking && isMoving)
+        {
+            StartCoroutine(PlayStep(audStep, walkStepInterval));
+        }
+        else if (state == MovementState.sprinting && isMoving)
+        {
+            StartCoroutine(PlayStep(audStep, sprintStepInterval));
+        }
     }
 
 
+    private IEnumerator PlayStep(List<AudioClip> clips, float interval)
+    {
+        isPlayingStep = true;
 
-    
+        // Play a random step sound
+        if (clips != null && clips.Count > 0)
+        { 
+            aud.PlayOneShot(audStep[Random.Range(0, audStep.Count)], audStepVol);
+            yield return new WaitForSeconds(interval);
+        }
+
+
+        isPlayingStep = false;
+    }
+
 
     private void FixedUpdate()
     {
         MovePlayer();
     }
+
+
 
     private void MyInput()
     {
@@ -326,7 +380,10 @@ public class AdvancedMovement : MonoBehaviour
         }
 
         else if (grounded)
+        { 
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+            HandleSteps();
+        }
 
         else if (!grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
@@ -401,6 +458,11 @@ public class AdvancedMovement : MonoBehaviour
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+
+        if (audJump.Count > 0)
+        {
+            aud.PlayOneShot(audJump[Random.Range(0, audJump.Count)], audJumpVol);
+        }
     }
     private void ResetJump()
     {
@@ -424,4 +486,6 @@ public class AdvancedMovement : MonoBehaviour
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
+
+
 }

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35275d5334a9aaf49b4b3b247f0d691a, type: 3}
+  m_Name: MediumAmmo
+  m_EditorClassIdentifier: Assembly-CSharp::AmmoStats
+  ammoStackCount: 8
+  ammoType: 1
+  ammoModel: {fileID: 2063244432432072063, guid: 0efa73c4de1efdc4b9a3ac9e72664a50, type: 3}

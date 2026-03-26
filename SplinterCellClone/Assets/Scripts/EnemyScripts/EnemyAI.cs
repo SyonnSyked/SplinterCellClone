@@ -22,10 +22,10 @@ public class EnemyAI : MonoBehaviour, iDamage
     [SerializeField] int roamPauseTime;
 
     [Header("----GunRelated----")]
+    [SerializeField] GunStats equippedGun;
     [SerializeField] GameObject bullet;
     [SerializeField] float shootRate;
     [SerializeField] Transform shootPos;
-    [SerializeField] Transform gun;
     [SerializeField] Transform gunPivot;
 
 
@@ -71,6 +71,11 @@ public class EnemyAI : MonoBehaviour, iDamage
         }
 
       
+    }
+
+    public GunStats GetGunStats()
+    {
+        return equippedGun;
     }
 
     void CheckRoam()
