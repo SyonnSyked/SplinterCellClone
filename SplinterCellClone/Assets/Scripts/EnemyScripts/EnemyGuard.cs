@@ -16,7 +16,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
     [SerializeField] float rotationSpeed;
     [SerializeField] float investigateWaitTime;
 
-    public Transform[] patrolWaypoints;
+    public List<GameObject> patrolWaypoints = new List<GameObject>();
     private int currentWaypointIndex = 0;
     private NavMeshAgent agent;
     private bool hasLastKnownTargetPosition;
@@ -74,6 +74,10 @@ public class EnemyGuard : MonoBehaviour, iDamage
 
     void Start()
     {
+        GameManager.instance.UpdateEnemyCount(1);
+
+        InitializePatrolPoints();
+        
         FindPlayer();
     }
 
@@ -118,6 +122,26 @@ public class EnemyGuard : MonoBehaviour, iDamage
                 UpdateHighAlert();
                 break;
         }
+    }
+
+    bool InitializePatrolPoints()
+    {
+        foreach (GameObject patrolPoint in GameManager.instance.patrolWaypoints)
+        {
+            if (patrolPoint != null)
+            {
+                patrolWaypoints.Add(patrolPoint);
+            }
+            else if (patrolPoint == null)
+            {
+                Debug.LogWarning("${name}: was unable to initialize patrol points list on EnemyGuard.cs");
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -184,15 +208,15 @@ public class EnemyGuard : MonoBehaviour, iDamage
 
     void UpdatePatrol()
     {
-        if (patrolWaypoints == null || patrolWaypoints.Length == 0) return;
+        if (patrolWaypoints == null || patrolWaypoints.Count == 0) return;
 
         agent.speed = patrolSpeed;
         agent.isStopped = false;
-        agent.SetDestination(patrolWaypoints[currentWaypointIndex].position);
+        agent.SetDestination(patrolWaypoints[currentWaypointIndex].transform.position);
 
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
         {
-            currentWaypointIndex = (currentWaypointIndex + 1) % patrolWaypoints.Length;
+            currentWaypointIndex = (currentWaypointIndex + 1) % patrolWaypoints.Count;
             buddyCheckTimer = 0f; // Reset timer when reaching a waypoint (active patrol)
         }
     }

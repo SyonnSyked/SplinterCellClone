@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using NUnit.Framework;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -22,6 +24,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] public GameObject lightEnemy;
     [SerializeField] public GameObject guardEnemy;
     [SerializeField] public GameObject playerShootingRoot;
+
+    public List<GameObject> patrolWaypoints = new List<GameObject>();
 
 
 
