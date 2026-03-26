@@ -57,6 +57,9 @@ public class Damage : MonoBehaviour
         {
             if (enType == entityType.environmental)
             {
+                lightEnemyScript = null;
+                guardEnemyScript = null;
+                playerShootingScript = null;
                 return;
             }
         }
