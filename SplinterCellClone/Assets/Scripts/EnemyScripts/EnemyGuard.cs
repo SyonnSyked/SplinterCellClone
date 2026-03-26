@@ -2,15 +2,27 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.InputSystem.Android;
 
 public enum AIState { Patrol, Investigate, SearchForMissing, HighAlert }
 
 public class EnemyGuard : MonoBehaviour, iDamage
 {
     [Header("Movement Settings")]
+    [SerializeField] float detectionRange;
+    [SerializeField] float patrolSpeed;
+    [SerializeField] float patrolStopDistance;
+    [SerializeField] float alertSpeed;
+    [SerializeField] float rotationSpeed;
+    [SerializeField] float investigateWaitTime;
+
     public Transform[] patrolWaypoints;
     private int currentWaypointIndex = 0;
     private NavMeshAgent agent;
+    private bool hasLastKnownTargetPosition;
+    private Vector3 lastKnownTargetPosition;
+
+
 
     [Header("Stealth Logic")]
     public AIState currentState = AIState.Patrol;
@@ -19,6 +31,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
     public const float BUDDY_MISSING_THRESHOLD = 30f;
 
     [Header("Combat Settings")]
+    [SerializeField] ParticleSystem hitEffect;
     [SerializeField] GunStats equippedGun;
     [SerializeField] GameObject bullet;
     [SerializeField] Transform shootPos;
@@ -41,7 +54,22 @@ public class EnemyGuard : MonoBehaviour, iDamage
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        allGuards.Add(this); // Registration for "Radio" communication
+
+        if (agent != null)
+        {
+            agent.speed = patrolSpeed;
+            agent.stoppingDistance = AttackRange * 0.9f;
+        }
+
+        if (model != null)
+        {
+            colorOrg = model.material.color;
+        }
+
+        if (!allGuards.Contains(this))
+        { 
+            allGuards.Add(this);
+        }
     }
 
     void Start()
@@ -61,17 +89,33 @@ public class EnemyGuard : MonoBehaviour, iDamage
 
     void Update()
     {
+        if (isDead || agent == null || !agent.enabled)
+            return;
+
+        if (PlayerTransform == null)
+        {
+            FindPlayer();
+        }
+
         switch (currentState)
         {
             case AIState.Patrol:
                 UpdatePatrol();
                 CheckForMissingPatrols();
+                TryDetectPlayer();
                 break;
+
             case AIState.Investigate:
+                TryDetectPlayer();
                 break;
+
+            case AIState.SearchForMissing:
+                UpdateSearchForMissing();
+                TryDetectPlayer();
+                break;
+
             case AIState.HighAlert:
-                agent.speed = 5.0f; // Run to player or body
-                AttackPlayer();
+                UpdateHighAlert();
                 break;
         }
     }
@@ -108,6 +152,8 @@ public class EnemyGuard : MonoBehaviour, iDamage
 
     public void OnHearNoise(Vector3 location)
     {
+        if (isDead) return;
+
         // Check memory: Is this the 3rd time we heard a noise at this exact spot
         int repeatedCount = distractionHistory.FindAll(pos => Vector3.Distance(pos, location) < 1.0f).Count;
 
@@ -125,18 +171,24 @@ public class EnemyGuard : MonoBehaviour, iDamage
 
     public void OnSeeBody(GameObject body)
     {
-        if (currentState != AIState.HighAlert)
+        if (isDead) return;
+
+        if (body != null)
         {
             currentState = AIState.HighAlert;
+            hasLastKnownTargetPosition = true;
+            lastKnownTargetPosition = body.transform.position;
             RadioAllies("Man down! There's a body at " + body.transform.position);
         }
     }
 
     void UpdatePatrol()
     {
-        if (patrolWaypoints.Length == 0) return;
+        if (patrolWaypoints == null || patrolWaypoints.Length == 0) return;
 
-        agent.destination = patrolWaypoints[currentWaypointIndex].position;
+        agent.speed = patrolSpeed;
+        agent.isStopped = false;
+        agent.SetDestination(patrolWaypoints[currentWaypointIndex].position);
 
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
         {
@@ -151,21 +203,108 @@ public class EnemyGuard : MonoBehaviour, iDamage
         if (buddyCheckTimer > BUDDY_MISSING_THRESHOLD)
         {
             currentState = AIState.SearchForMissing;
+            hasLastKnownTargetPosition = true;
+            lastKnownTargetPosition = transform.position;
             RadioAllies("There's a post not reporting in. I'm checking it out.");
         }
     }
 
+    void UpdateSearchForMissing()
+    {
+        agent.speed = patrolSpeed;
+
+        if (hasLastKnownTargetPosition)
+        {
+            agent.SetDestination(lastKnownTargetPosition);
+
+            if (!agent.pathPending && agent.remainingDistance < patrolStopDistance)
+            {
+                hasLastKnownTargetPosition = false;
+                currentState = AIState.Patrol;
+                buddyCheckTimer = 0f;
+            }
+        }
+        else 
+        {
+            currentState = AIState.Patrol;
+            buddyCheckTimer = 0f;
+        }
+    }
+
+    void UpdateHighAlert()
+    {
+        if (PlayerTransform == null)
+        {
+            currentState = AIState.Patrol;
+            return;
+        }
+
+        agent.speed = alertSpeed;
+        agent.isStopped = false;
+
+        float distance = Vector3.Distance(transform.position, PlayerTransform.position);
+
+        hasLastKnownTargetPosition = true;
+        lastKnownTargetPosition = PlayerTransform.position;
+
+        if (distance > detectionRange * 1.5f)
+        {
+            currentState = AIState.Investigate;
+            agent.SetDestination(lastKnownTargetPosition);
+            return;
+        }
+
+        agent.SetDestination(PlayerTransform.position);
+        FaceTarget(PlayerTransform.transform.position);
+
+        if (distance <= AttackRange && Time.time >= LastAttackTime + AttackCooldown)
+        {
+            Attack();
+            LastAttackTime = Time.time;
+        }
+    }
+
+    void FaceTarget(Vector3 targetPosition)
+    { 
+        Vector3 lookPos = targetPosition - transform.position;
+        lookPos.y = 0f;
+
+        if (lookPos.sqrMagnitude <= 0.001f)
+        {
+            return;
+        }
+
+        Quaternion targetRotation = Quaternion.LookRotation(lookPos);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
+
+
     IEnumerator InvestigateLocation(Vector3 location)
     {
         currentState = AIState.Investigate;
-        agent.destination = location;
+        agent.speed = patrolSpeed;
+        agent.isStopped = false;
+        agent.SetDestination(location);
 
-        // Wait until we arrive
-        while (agent.pathPending || agent.remainingDistance > 0.5f)
+        while (!isDead && agent.enabled && (agent.pathPending || agent.remainingDistance > patrolStopDistance))
+        {
+            TryDetectPlayer();
+            if (currentState == AIState.HighAlert)
+                yield break;
+
             yield return null;
+        }
 
-        // Look around for 3 seconds
-        yield return new WaitForSeconds(3f);
+        float timer = 0f;
+        while (timer < investigateWaitTime)
+        {
+            TryDetectPlayer();
+            if (currentState == AIState.HighAlert)
+                yield break;
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
 
         currentState = AIState.Patrol;
     }
@@ -173,9 +312,9 @@ public class EnemyGuard : MonoBehaviour, iDamage
     public void RadioAllies(string message)
     {
         Debug.Log($"[RADIO] {message}");
-        foreach (var guard in allGuards)
+        foreach (EnemyGuard guard in allGuards)
         {
-            if (guard != this)
+            if (guard != null && guard != this && !guard.isDead)
             {
                 // Alert nearby guards to the same location
                 guard.ReceiveRadioAlert(transform.position);
@@ -185,10 +324,15 @@ public class EnemyGuard : MonoBehaviour, iDamage
 
     public void ReceiveRadioAlert(Vector3 alertPos)
     {
+        if (isDead) return;
+
         if (currentState != AIState.HighAlert)
         {
             currentState = AIState.Investigate;
-            agent.destination = alertPos;
+            hasLastKnownTargetPosition = true;
+            lastKnownTargetPosition = alertPos;
+            agent.isStopped = false;
+            agent.SetDestination(alertPos);
         }
     }
 
@@ -219,7 +363,12 @@ public class EnemyGuard : MonoBehaviour, iDamage
 
     void Shoot()
     {
-        shootTimer = 0;
+        if (bullet == null || shootPos == null)
+        {
+            Debug.LogWarning($"{name}: Missing bullet prefab or shootPos");
+            return;
+        }
+
         Instantiate(bullet, shootPos.position, gunPivot.transform.rotation);
     }
 
@@ -231,14 +380,39 @@ public class EnemyGuard : MonoBehaviour, iDamage
 
     public void TakeDamage(int amount)
     {
+        if (isDead)
+            return;
+
         HP -= amount;
-        agent.SetDestination(GameManager.instance.player.transform.position);
+
+        if (hitEffect != null)
+        {
+            Instantiate(hitEffect, gameObject.transform.position, Quaternion.identity);
+        }
+
+
+        if (PlayerTransform == null)
+        {
+            FindPlayer();
+        }
+
+        if (PlayerTransform != null)
+        {
+            currentState = AIState.HighAlert;
+            hasLastKnownTargetPosition = true;
+            lastKnownTargetPosition = PlayerTransform.position;
+
+            if (agent != null && agent.enabled)
+            {
+                agent.isStopped = false;
+                agent.SetDestination(PlayerTransform.position);
+            }
+        }
 
         if (HP <= 0)
         {
             GameManager.instance.UpdateEnemyCount(-1);
             Die();
-         
         }
         else
         {
@@ -247,6 +421,9 @@ public class EnemyGuard : MonoBehaviour, iDamage
     }
     IEnumerator flashRed()
     {
+        if (model == null)
+            yield break;
+
         model.material.color = Color.red;
         yield return new WaitForSeconds(0.1f);
         model.material.color = colorOrg;
@@ -264,16 +441,15 @@ public class EnemyGuard : MonoBehaviour, iDamage
 
         gameObject.layer = LayerMask.NameToLayer("Body");
 
-        if (TryGetComponent<NavMeshAgent>(out NavMeshAgent agent))
+        StopAllCoroutines();
+
+        if (agent != null && agent.enabled)
         {
             agent.isStopped = true;
-            agent.enabled = false; // Stops them from moving
+            agent.enabled = false;
         }
 
-        if (TryGetComponent<EnemyGuard>(out EnemyGuard ai))
-        {
-            ai.enabled = false; // Stops the AI brain
-        }
+        enabled = false;
 
         // will make Ragdoll function more indepth later
         HandleDeathPhysics();
