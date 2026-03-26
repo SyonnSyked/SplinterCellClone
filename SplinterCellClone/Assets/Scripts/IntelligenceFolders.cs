@@ -15,7 +15,7 @@ public class IntelligenceFolders : MonoBehaviour
 
     void Update()
     {
-        if (playerNear = true && Input.GetButtonDown("Interact"))
+        if (playerNear == true && Input.GetButtonDown("Interact"))
         {
             Collect();
         }

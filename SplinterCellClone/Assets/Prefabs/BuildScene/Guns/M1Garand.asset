@@ -16,7 +16,8 @@ MonoBehaviour:
   range: 200
   rateOfFire: 0.2
   isAutomatic: 0
-  currentAmmo: 8
+  ammoType: 1
+  currentAmmo: 7
   maxAmmo: 8
   gunModel: {fileID: 4551639203208912920, guid: f75496d8798b33641be0c78c23e7976b, type: 3}
   shootPos: {fileID: 3912861796573083643, guid: 3d5ae4130a7b53941b7e3dc7e8a1a808, type: 3}
