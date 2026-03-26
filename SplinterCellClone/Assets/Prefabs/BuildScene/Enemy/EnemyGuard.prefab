@@ -163,10 +163,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b96a3bad1ac63e84a9818d92c4371bbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyGuard
+  detectionRange: 20
+  patrolSpeed: 10
+  patrolStopDistance: 10
+  alertSpeed: 3
+  rotationSpeed: 20
+  investigateWaitTime: 5
   patrolWaypoints: []
   currentState: 0
   suspicionLevel: 0
   buddyCheckTimer: 0
+  hitEffect: {fileID: 4133136451143477217, guid: 9625a7e574f931b4689c59adcc2da394, type: 3}
   equippedGun: {fileID: 11400000, guid: 1c0417dba20f9404cb2059c8e800b2d9, type: 2}
   bullet: {fileID: 328919941245513563, guid: 709d202dee5a6f54499c832310a761c2, type: 3}
   shootPos: {fileID: 5526869569440400556}

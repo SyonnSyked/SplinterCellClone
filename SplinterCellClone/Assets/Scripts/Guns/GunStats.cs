@@ -13,6 +13,8 @@ public class GunStats : ScriptableObject
     public int currentAmmo;
     public int maxAmmo;
 
+    
+
     [Header("----Visual----")]
     public GameObject gunModel;
     public Transform shootPos;

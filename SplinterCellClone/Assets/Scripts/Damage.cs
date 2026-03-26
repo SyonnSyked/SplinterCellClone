@@ -8,7 +8,7 @@ public class Damage : MonoBehaviour
     [SerializeField] EnemyGuard guardEnemyScript;
     [SerializeField] ShootingComponent playerShootingScript;
     enum damageType { bullet, stationary, DOT }
-    enum entityType { light, guard, camera, player}
+    enum entityType { light, guard, camera, player, environmental}
 
     [SerializeField] damageType dmgType;
     [SerializeField] entityType enType;
@@ -38,17 +38,30 @@ public class Damage : MonoBehaviour
                 case entityType.light:
                     gunStats = lightEnemyScript.GetGunStats();
                     break;
-                    
+
                 case entityType.guard:
                     gunStats = guardEnemyScript.GetGunStats();
                     break;
                 case entityType.player:
                     gunStats = playerShootingScript.GetGunStats();
                     break;
+                case entityType.environmental:
+                    gunStats = null;
+                    break;
             }
             SetBulletStats();
             rb.linearVelocity = transform.forward * speed;
             Destroy(gameObject, destroyTime);
+        }
+        else if (dmgType == damageType.DOT)
+        {
+            if (enType == entityType.environmental)
+            {
+                lightEnemyScript = null;
+                guardEnemyScript = null;
+                playerShootingScript = null;
+                return;
+            }
         }
     }
 

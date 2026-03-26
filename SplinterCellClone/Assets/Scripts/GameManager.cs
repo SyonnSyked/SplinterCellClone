@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using NUnit.Framework;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -17,11 +19,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject interactPrompt;
     [SerializeField] TMP_Text enemyCountText;
     [SerializeField] TMP_Text intelText;
+    [SerializeField] TMP_Text ammoCurr;
+    [SerializeField] TMP_Text ammoMax;
+    [SerializeField] TMP_Text ammoReserve;
 
 
     [SerializeField] public GameObject lightEnemy;
     [SerializeField] public GameObject guardEnemy;
     [SerializeField] public GameObject playerShootingRoot;
+
+    public List<GameObject> patrolWaypoints = new List<GameObject>();
 
 
 
@@ -59,6 +66,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (Input.GetButtonDown("Cancel"))
         {
             if (menuActive == null)
@@ -165,6 +173,45 @@ public class GameManager : MonoBehaviour
        */
     }
 
+    public void updateAmmoMax()
+    {
+        var inventory = player.GetComponent<PlayerInventory>();
+        if (inventory != null && inventory.playerGuns.Count > 0)
+        {
+            var gun = inventory.playerGuns[inventory.gunListPos];
+            ammoMax.text = gun.maxAmmo.ToString();
+        }
+        else
+        {
+            ammoMax.text = "0";
+        }
+    }
 
+    public void updateAmmoCurr()
+    {
+        var inventory = player.GetComponent<PlayerInventory>();
+        if (inventory != null && inventory.playerGuns.Count > 0)
+        {
+            var gun = inventory.playerGuns[inventory.gunListPos];
+            ammoCurr.text = gun.currentAmmo.ToString();
+        }
+        else
+        {
+            ammoCurr.text = "0";
+        }
+    }
+
+    public void updateAmmoReserve()
+    {
+        var inventory = player.GetComponent<PlayerInventory>();
+        if (inventory != null)
+        {
+           
+        }
+        else
+        {
+            ammoReserve.text = "0";
+        }
+    }
 }
 

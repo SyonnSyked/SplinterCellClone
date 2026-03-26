@@ -6,6 +6,8 @@ public class gunStats : ScriptableObject
 {
     public GameObject gunModel;
 
+    [Range (1, 3)]public int bulletType;
+
     [Range(1, 10)] public int shootDamage;
 
     [Range (5, 300)] public int shootDist;
