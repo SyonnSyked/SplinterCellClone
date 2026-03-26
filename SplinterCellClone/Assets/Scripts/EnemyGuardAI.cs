@@ -170,14 +170,32 @@ public class EnemyGuard : MonoBehaviour, iDamage
     {
         if (isDead) return;
         isDead = true;
+
+        // --- DETACHES THE DIALOGUE ---
+        if (dialogueCanvas != null)
+        {
+            // This un-sticks the UI from the guard so it stays floating
+            dialogueCanvas.transform.SetParent(null);
+
+            // Keep it slightly above the death point
+            dialogueCanvas.transform.position += Vector3.up * 0.5f;
+        }
+
         Say("...Backup... needed...");
+
         gameObject.tag = "Body";
         agent.isStopped = true;
         agent.enabled = false;
+
+        // Body falls over
         transform.rotation = Quaternion.Euler(90, transform.rotation.eulerAngles.y, 0);
-        Invoke("HideUI", 2f);
+
+        // Hide the floating text after a few seconds so it doesn't stay forever
+        Invoke("HideUI", 3f);
+
         this.enabled = false;
     }
+
 
     void HideUI() { if (dialogueCanvas != null) dialogueCanvas.SetActive(false); }
 
