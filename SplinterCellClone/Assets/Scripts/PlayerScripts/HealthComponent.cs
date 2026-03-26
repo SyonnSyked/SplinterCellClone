@@ -43,4 +43,5 @@ public class HealthComponent : MonoBehaviour, iDamage
     {
         GameManager.instance.playerHPBar.fillAmount = (float)HP / HPOriginal;
     }
+
 }
