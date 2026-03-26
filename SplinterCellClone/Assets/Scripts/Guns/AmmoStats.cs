@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[CreateAssetMenu]
 public class AmmoStats : ScriptableObject
 {
 
