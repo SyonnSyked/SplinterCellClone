@@ -9,6 +9,10 @@ public class PlayerInventory : MonoBehaviour, iPickup
     public int gunListPos;
     public int itemListPos;
 
+    [Range(0, 1000)] private int bigAmmo;
+    [Range(0, 1000)] private int medAmmo;
+    [Range(0, 1000)] private int smallAmmo;
+
     public void AddItemToBag(GameObject item)
     { 
         playerInv.Add(item);
