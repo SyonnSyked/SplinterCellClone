@@ -5,7 +5,7 @@ public class Spawner: MonoBehaviour
 {
     [Header("----SpawnerData----")]
     [SerializeField] Transform spawnPos;
-    [SerializeField] GameObject spawnPrefab;
+    [SerializeField] public GameObject spawnPrefab;
     [SerializeField] int spawnLimit;
 
     float spawnX;

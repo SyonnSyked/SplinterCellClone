@@ -52,6 +52,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: FullPlayerStack Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 6090433904835388670, guid: 33ee71859c7a9c44da1e8053a7d07f19, type: 3}
+      propertyPath: walkStepInterval
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090433904835388670, guid: 33ee71859c7a9c44da1e8053a7d07f19, type: 3}
+      propertyPath: sprintStepInterval
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

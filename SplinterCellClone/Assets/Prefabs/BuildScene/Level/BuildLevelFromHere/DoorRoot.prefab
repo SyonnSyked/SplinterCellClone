@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5937654178942617585}
   - component: {fileID: 9104188604958740993}
   - component: {fileID: 3671365236538938395}
+  - component: {fileID: 2646710349265395558}
   m_Layer: 0
   m_Name: DoorRoot
   m_TagString: Untagged
@@ -48,6 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b94e646db9a41014fa3295d64ad162f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
+  doorAnimator: {fileID: 0}
 --- !u!135 &3671365236538938395
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -69,6 +71,28 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 6
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &2646710349265395558
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 600695513598611393}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3f97756eb41c38f489933081406c137e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2803251313894523248
 GameObject:
   m_ObjectHideFlags: 0
@@ -78,7 +102,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1474519062664800799}
-  - component: {fileID: 8062618315637649198}
   - component: {fileID: 6282352395050095455}
   - component: {fileID: 182043193497647792}
   - component: {fileID: 5081932984380102523}
@@ -104,28 +127,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5937654178942617585}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!95 &8062618315637649198
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2803251313894523248}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3f97756eb41c38f489933081406c137e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!33 &6282352395050095455
 MeshFilter:
   m_ObjectHideFlags: 0

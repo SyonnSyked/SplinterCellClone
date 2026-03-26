@@ -3,34 +3,23 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
-    private Animator doorAnimator;
+    [SerializeField] private Animator doorAnimator;
 
     bool playerInTrigger;
-    bool isDoorOpen;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        doorAnimator = GetComponentInChildren<Animator>();
-        isDoorOpen = false;
+        doorAnimator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerInTrigger)
-        {
-            if (!isDoorOpen && Input.GetButtonDown("Interact") && CheckAnimationState("Closed"))
-            {
-                doorAnimator.SetTrigger("DoorOpen");
-                isDoorOpen = true;
-            }
-            else if (isDoorOpen && Input.GetButtonDown("Interact") && CheckAnimationState("Open"))
-            {
-                doorAnimator.SetTrigger("DoorClose");
-                isDoorOpen = false;
-            }
-        }
+        if (playerInTrigger && Input.GetButtonDown("Interact") && CheckAnimationState("Closed"))
+            doorAnimator.SetTrigger("DoorOpen");
+        else if (playerInTrigger && Input.GetButtonDown("Interact") && CheckAnimationState("Open"))
+            doorAnimator.SetTrigger("DoorClose");
     }
 
 

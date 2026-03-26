@@ -157,20 +157,10 @@ public class GameManager : MonoBehaviour
 
     public void RespawnPlayer()
     {
-        StartCoroutine(StaggerDestroyAndRespawn());
+        GameManager.instance.player.transform.position = GameManager.instance.playerSpawner.transform.position;
     }
 
 
-    IEnumerator StaggerDestroyAndRespawn()
-    {
-        if (player != null)
-        {
-            Destroy(player.gameObject);
-            yield return null;
-        }
-
-        playerSpawner.GetComponentInChildren<Spawner>().SpawnPlayer();
-    }
 
     public void showInteractPrompt(bool show)
     {
