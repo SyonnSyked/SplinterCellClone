@@ -18,7 +18,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
     public AIState currentState = AIState.Patrol;
     public Transform[] patrolWaypoints;
     public float waypointBuffer = 1.5f;
-    public float bodySearchDistance = 3.0f; // New: Keeps them from stepping on bodies
+    public float bodySearchDistance = 3.0f; // Keeps them from stepping on bodies
     private int currentWaypointIndex = 0;
     private NavMeshAgent agent;
 
@@ -29,7 +29,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
     private Coroutine dialogueCoroutine;
     private string lastSaidMessage = "";
 
-    [Header("--- Combat (Procedural Staff) ---")]
+    [Header("--- Combat (Staff) ---")]
     public Transform staffPivot;
     public int staffDamage = 20;
     public float attackRange = 2.5f;
@@ -59,7 +59,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
     void Start()
     {
         try { gameObject.CompareTag("Body"); }
-        catch { Debug.LogError($"{gameObject.name}: Tag 'Body' not found!"); }
+        catch { Debug.LogError($"{gameObject.name}: Tag 'Body' not found"); }
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null) playerTransform = playerObj.transform;
@@ -121,7 +121,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
             Say("Man down! I found a body!");
             currentState = AIState.HighAlert;
 
-            // FIX: Set stopping distance so they don't step on the body
+            // Set stopping distance so they don't step on the body
             agent.stoppingDistance = bodySearchDistance;
             agent.SetDestination(obj.transform.position);
 
@@ -161,7 +161,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
     {
         if (isDead) return;
         HP -= amount;
-        Say("Argh! I'm hit!");
+        Say("I'm hit!");
         if (currentState != AIState.HighAlert) currentState = AIState.HighAlert;
         if (HP <= 0) Die();
     }
