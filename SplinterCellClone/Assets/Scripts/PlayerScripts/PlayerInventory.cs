@@ -13,6 +13,23 @@ public class PlayerInventory : MonoBehaviour, iPickup
     [Range(0, 1000)] private int medAmmo;
     [Range(0, 1000)] private int smallAmmo;
 
+
+    public int GetSmallAmmoCount()
+    {
+        return smallAmmo;
+    }
+
+    public int GetMediumAmmoCount()
+    {
+        return medAmmo;
+    }
+    public int GetHeavyAmmoCount()
+    {
+        return bigAmmo;
+    }
+
+   
+
     public void AddItemToBag(GameObject item)
     { 
         playerInv.Add(item);
@@ -23,5 +40,22 @@ public class PlayerInventory : MonoBehaviour, iPickup
     { 
         playerGuns.Add(gun);
         gunListPos++;
+    }
+
+
+    public void AddAmmoToBag(AmmoStats ammo)
+    {
+        switch (ammo.ammoType)
+        {
+            case AmmoStats.AmmoType.light:
+                smallAmmo += ammo.ammoStackCount;
+                break;
+            case AmmoStats.AmmoType.medium:
+                medAmmo += ammo.ammoStackCount;
+                break;
+            case AmmoStats.AmmoType.heavy:
+                bigAmmo += ammo.ammoStackCount;
+                break;
+        }
     }
 }
