@@ -1,10 +1,11 @@
-using UnityEngine;
-using UnityEngine.AI;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
+using UnityEngine.AI;
+using static GuardVision;
 
-public enum AIState { Patrol, Investigate, SearchForMissing, HighAlert}
+public enum AIState { Patrol, Investigate, SearchForMissing, HighAlert }
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyGuard : MonoBehaviour, iDamage
@@ -16,7 +17,8 @@ public class EnemyGuard : MonoBehaviour, iDamage
     [Header("--- State Management ---")]
     public AIState currentState = AIState.Patrol;
     public Transform[] patrolWaypoints;
-    public float waypointBuffer = 1.5f; // Prevents "circling" bug
+    public float waypointBuffer = 1.5f;
+    public float bodySearchDistance = 3.0f; // New: Keeps them from stepping on bodies
     private int currentWaypointIndex = 0;
     private NavMeshAgent agent;
 
@@ -25,9 +27,9 @@ public class EnemyGuard : MonoBehaviour, iDamage
     public GameObject dialogueCanvas;
     public float textDuration = 2.5f;
     private Coroutine dialogueCoroutine;
-    private string lastSaidMessage = ""; // Prevents text flickering/spam
+    private string lastSaidMessage = "";
 
-    [Header("--- Combat (Staff) ---")]
+    [Header("--- Combat (Procedural Staff) ---")]
     public Transform staffPivot;
     public int staffDamage = 20;
     public float attackRange = 2.5f;
@@ -41,7 +43,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
     private Transform playerTransform;
 
     [Header("--- Buddy System & Memory ---")]
-    public EnemyGuard buddyAI; // Add partner here 
+    public EnemyGuard buddyAI;
     private List<Vector3> distractionHistory = new List<Vector3>();
     private static List<EnemyGuard> allGuards = new List<EnemyGuard>();
 
@@ -56,9 +58,8 @@ public class EnemyGuard : MonoBehaviour, iDamage
 
     void Start()
     {
-        // Tag safety check
         try { gameObject.CompareTag("Body"); }
-        catch { Debug.LogError($"{gameObject.name}: Tag 'Body' not found in Project Settings"); }
+        catch { Debug.LogError($"{gameObject.name}: Tag 'Body' not found!"); }
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null) playerTransform = playerObj.transform;
@@ -74,20 +75,25 @@ public class EnemyGuard : MonoBehaviour, iDamage
                 UpdatePatrol();
                 CheckOnBuddy();
                 break;
+
             case AIState.HighAlert:
                 HandleCombat();
                 break;
-                // Other states are managed by Coroutines (Investigate/Search)
+
+            case AIState.Investigate:
+                break;
+
+            case AIState.SearchForMissing:
+                break;
         }
     }
+
 
     // --- DIALOGUE SYSTEM ---
 
     public void Say(string message)
     {
         if (isDead || dialogueText == null || dialogueCanvas == null) return;
-
-        // If we are already saying this exact thing, don't restart the coroutine (prevents flickering)
         if (message == lastSaidMessage && dialogueCanvas.activeSelf) return;
 
         if (dialogueCoroutine != null) StopCoroutine(dialogueCoroutine);
@@ -99,9 +105,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
         lastSaidMessage = message;
         dialogueCanvas.SetActive(true);
         dialogueText.text = message;
-
         yield return new WaitForSeconds(textDuration);
-
         dialogueCanvas.SetActive(false);
         lastSaidMessage = "";
     }
@@ -116,8 +120,12 @@ public class EnemyGuard : MonoBehaviour, iDamage
         {
             Say("Man down! I found a body!");
             currentState = AIState.HighAlert;
+
+            // FIX: Set stopping distance so they don't step on the body
+            agent.stoppingDistance = bodySearchDistance;
             agent.SetDestination(obj.transform.position);
-            RadioAllies("We have a casualty! Search the area!");
+
+            RadioAllies("We have a casualty!");
         }
         else if (obj.CompareTag("Player"))
         {
@@ -125,7 +133,10 @@ public class EnemyGuard : MonoBehaviour, iDamage
             {
                 Say("Found you, intruder!");
                 currentState = AIState.HighAlert;
-                RadioAllies("Intruder spotted! Engaging!");
+
+                // Reset stopping distance for combat
+                agent.stoppingDistance = attackRange - 0.5f;
+                RadioAllies("Intruder spotted!");
             }
         }
     }
@@ -149,10 +160,8 @@ public class EnemyGuard : MonoBehaviour, iDamage
     public void TakeDamage(int amount)
     {
         if (isDead) return;
-
         HP -= amount;
         Say("Argh! I'm hit!");
-
         if (currentState != AIState.HighAlert) currentState = AIState.HighAlert;
         if (HP <= 0) Die();
     }
@@ -161,17 +170,11 @@ public class EnemyGuard : MonoBehaviour, iDamage
     {
         if (isDead) return;
         isDead = true;
-
         Say("...Backup... needed...");
         gameObject.tag = "Body";
-
         agent.isStopped = true;
         agent.enabled = false;
-
-        // Visual "Fall Over"
         transform.rotation = Quaternion.Euler(90, transform.rotation.eulerAngles.y, 0);
-
-        // Cleanup UI
         Invoke("HideUI", 2f);
         this.enabled = false;
     }
@@ -182,6 +185,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
     {
         if (playerTransform == null) return;
 
+        agent.stoppingDistance = attackRange - 0.5f;
         agent.SetDestination(playerTransform.position);
         float distance = Vector3.Distance(transform.position, playerTransform.position);
 
@@ -196,10 +200,8 @@ public class EnemyGuard : MonoBehaviour, iDamage
     {
         isSwinging = true;
         agent.isStopped = true;
-
         Say("Hyaah!");
 
-        // Wind-up
         Quaternion windUpRot = originalStaffRotation * Quaternion.Euler(0, -30, 0);
         float t = 0;
         while (t < 0.2f)
@@ -209,7 +211,6 @@ public class EnemyGuard : MonoBehaviour, iDamage
             yield return null;
         }
 
-        // Swing Forward
         Quaternion targetRot = originalStaffRotation * Quaternion.Euler(swingRotation);
         t = 0;
         bool damageDone = false;
@@ -225,7 +226,6 @@ public class EnemyGuard : MonoBehaviour, iDamage
             yield return null;
         }
 
-        // Recovery
         yield return new WaitForSeconds(0.3f);
         t = 0;
         while (t < 0.3f)
@@ -242,10 +242,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
     void CheckForImpact()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward, attackRange, playerLayer);
-        foreach (Collider h in hits)
-        {
-            h.GetComponent<iDamage>()?.TakeDamage(staffDamage);
-        }
+        foreach (Collider h in hits) h.GetComponent<iDamage>()?.TakeDamage(staffDamage);
     }
 
     // --- MOVEMENT & RADIO ---
@@ -254,6 +251,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
     {
         if (patrolWaypoints.Length == 0 || agent.isStopped) return;
 
+        agent.stoppingDistance = 0; // Waypoints need exact arrival
         agent.SetDestination(patrolWaypoints[currentWaypointIndex].position);
 
         if (!agent.pathPending && agent.remainingDistance < waypointBuffer)
@@ -270,6 +268,9 @@ public class EnemyGuard : MonoBehaviour, iDamage
             {
                 Say("Partner? Where are you?");
                 currentState = AIState.SearchForMissing;
+
+                // FIX: Apply the distance here too
+                agent.stoppingDistance = bodySearchDistance;
                 agent.SetDestination(buddyAI.transform.position);
             }
         }
@@ -279,9 +280,10 @@ public class EnemyGuard : MonoBehaviour, iDamage
     {
         currentState = AIState.Investigate;
         agent.isStopped = false;
+        agent.stoppingDistance = 1f; // Stop slightly away from noise source
         agent.SetDestination(location);
 
-        while (agent.pathPending || agent.remainingDistance > 1f) yield return null;
+        while (agent.pathPending || agent.remainingDistance > 1.2f) yield return null;
 
         yield return new WaitForSeconds(3f);
         if (currentState != AIState.HighAlert) currentState = AIState.Patrol;
@@ -307,7 +309,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
 
     public void takeDamage(int amount, PlayerState Instigator, bool Headshot = false)
     {
-        
+       
     }
 }
 
