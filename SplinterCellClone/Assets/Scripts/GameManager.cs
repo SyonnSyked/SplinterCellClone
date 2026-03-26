@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] public GameObject guardEnemy;
     [SerializeField] public GameObject playerShootingRoot;
 
+    public List<EnemySpawner> enemySpawners = new List<EnemySpawner>();
+
     public List<GameObject> patrolWaypoints = new List<GameObject>();
 
 
@@ -61,6 +63,10 @@ public class GameManager : MonoBehaviour
         timeScaleOriginal = Time.timeScale;
 
         GameManager.instance.playerSpawner = GameObject.FindWithTag("PlayerSpawner");
+        foreach (EnemySpawner spawner in enemySpawners)
+        {
+            spawner.SpawnEnemy();
+        }
     }
 
     // Update is called once per frame

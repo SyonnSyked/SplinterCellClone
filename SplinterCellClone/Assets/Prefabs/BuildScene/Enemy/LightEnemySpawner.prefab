@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7769789645852603039}
-  - component: {fileID: 248816931912831260}
+  - component: {fileID: 3479076928199729816}
   m_Layer: 0
   m_Name: LightEnemySpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_TagString: EnemySpawnFlag
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &248816931912831260
+--- !u!114 &3479076928199729816
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,9 +41,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2516856417344369832}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ee44ab170a584540b35e45884b33f2d, type: 3}
+  m_Script: {fileID: 11500000, guid: 158099bd0223e56448b2fab0a6f76c30, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Spawner
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   spawnPos: {fileID: 7769789645852603039}
   spawnPrefab: {fileID: 3643114304497057307, guid: 3f6e2aa6b403c174f9fd4ef0ddc3d24a, type: 3}
   spawnLimit: 1

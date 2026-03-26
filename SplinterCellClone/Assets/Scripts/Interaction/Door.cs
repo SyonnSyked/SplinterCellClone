@@ -18,14 +18,14 @@ public class Door : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerInTrigger && Input.GetButtonDown("Interact"))
+        if (playerInTrigger)
         {
-            if (!isDoorOpen)
+            if (!isDoorOpen && Input.GetButtonDown("Interact") && CheckAnimationState("Closed"))
             {
                 doorAnimator.SetTrigger("DoorOpen");
                 isDoorOpen = true;
             }
-            else
+            else if (isDoorOpen && Input.GetButtonDown("Interact") && CheckAnimationState("Open"))
             {
                 doorAnimator.SetTrigger("DoorClose");
                 isDoorOpen = false;
@@ -49,5 +49,10 @@ public class Door : MonoBehaviour
             playerInTrigger = false;
         }
     }
+    private bool CheckAnimationState(string animation)
+    {
+        AnimatorStateInfo stateInfo = doorAnimator.GetCurrentAnimatorStateInfo(0);
 
+        return stateInfo.IsName(animation);
+    }
 }

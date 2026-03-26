@@ -10,6 +10,7 @@ TagManager:
   - PlayerSpawner
   - PlayerSpawnFlag
   - PlayerShootingRoot
+  - EnemySpawnFlag
   layers:
   - Default
   - TransparentFX
