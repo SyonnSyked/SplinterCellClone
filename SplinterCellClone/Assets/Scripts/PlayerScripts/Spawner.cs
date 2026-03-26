@@ -32,6 +32,8 @@ public class Spawner: MonoBehaviour
         Instantiate(spawnPrefab, spawnPos.position, Quaternion.Euler(spawnX, spawnY, spawnZ));
     }
 
+
+
     int GetEnemyCount()
     {
         return GameManager.instance.enemyCount;

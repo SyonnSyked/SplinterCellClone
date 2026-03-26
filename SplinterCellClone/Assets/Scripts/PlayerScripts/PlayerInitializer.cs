@@ -11,6 +11,9 @@ public class PlayerInitializer : MonoBehaviour
         GameManager.instance.playerShootingRoot = GameObject.FindWithTag("PlayerShootingRoot");
 
         GameManager.instance.playerShootingScript = GameManager.instance.playerShootingRoot.GetComponent<ShootingComponent>();
+
+
+        GameManager.instance.inWorldPlayerRoot = GameObject.FindWithTag("PlayerSpawnFlag");
     }
 
     // Update is called once per frame

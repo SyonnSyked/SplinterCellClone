@@ -601,6 +601,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3989976979302808432}
     - target: {fileID: 3142390626568178662, guid: 461e9bfe07aef814c88caf942a83d46e, type: 3}
+      propertyPath: enemySpawners.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142390626568178662, guid: 461e9bfe07aef814c88caf942a83d46e, type: 3}
       propertyPath: patrolWaypoints.Array.size
       value: 3
       objectReference: {fileID: 0}

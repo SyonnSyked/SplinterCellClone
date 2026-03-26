@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
 
 
 
+    public GameObject inWorldPlayerRoot;
     public GameObject player;
     public bool isPaused;
     public int briefcaseCount;
@@ -90,6 +91,11 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public void RespawnPlayer()
+    {
+        GameManager.instance.inWorldPlayerRoot.transform.position = GameManager.instance.playerSpawner.transform.position;
+        GameManager.instance.player.GetComponent<HealthComponent>().ResetHealth();
+    }
 
     public void StatePause()
     {
@@ -155,10 +161,6 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void RespawnPlayer()
-    {
-        GameManager.instance.player.transform.position = GameManager.instance.playerSpawner.transform.position;
-    }
 
 
 

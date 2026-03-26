@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.InputSystem.Android;
 
 public enum AIState { Patrol, Investigate, SearchForMissing, HighAlert }
 

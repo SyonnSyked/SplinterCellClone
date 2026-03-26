@@ -45,6 +45,14 @@ public class HealthComponent : MonoBehaviour, iDamage
     }
 
 
+    public void ResetHealth()
+    {
+        HPOriginal = maxHP;
+        HP = HPOriginal;
+        UpdatePlayerHealth();
+    }
+
+
 
     public void PlayHurtSound()
     {
