@@ -116,7 +116,7 @@ public class ShootingComponent : MonoBehaviour
     }
     void Shoot()
     {
-        StartCoroutine(PlayShootSound(shootClips, shootTimer));
+        StartCoroutine(PlayShootSound(shootClips, shootTimer + 0.5f));
 
         shootTimer = 0;
         Instantiate(bullet, shootPos.position, gunPivot.transform.rotation);

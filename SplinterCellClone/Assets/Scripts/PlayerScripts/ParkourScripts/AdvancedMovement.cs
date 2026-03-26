@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 public class AdvancedMovement : MonoBehaviour
 {
@@ -61,18 +62,15 @@ public class AdvancedMovement : MonoBehaviour
     [Header("~~~~~~Audio~~~~~")]
     [SerializeField] AudioSource aud;
 
-    [SerializeField] AudioClip[] audJump;
+    [SerializeField] List<AudioClip> audJump = new List<AudioClip>();
     [SerializeField] float audJumpVol;
 
-    [SerializeField] AudioClip[] audHurt;
-    [SerializeField] float audHurtVol;
-
-    [SerializeField] AudioClip[] audStep;
+    [SerializeField] List<AudioClip> audStep = new List<AudioClip>();
     [SerializeField] float audStepVol;
 
     [Header("~~~~~~Step Timing~~~~~")]
-    [SerializeField] float walkStepInterval = 0.5f;
-    [SerializeField] float sprintStepInterval = 0.3f;
+    [SerializeField] float walkStepInterval;
+    [SerializeField] float sprintStepInterval;
 
 
     bool isPlayingStep;
@@ -148,8 +146,6 @@ public class AdvancedMovement : MonoBehaviour
         HandleStaminaEmpty();
         //TextStuff();
 
-        HandleSteps();
-
         if (grounded)
             rb.linearDamping = groundDrag;
         else
@@ -159,33 +155,37 @@ public class AdvancedMovement : MonoBehaviour
 
     private void HandleSteps()
     {
-        bool isMoving = rb.linearVelocity.magnitude < 0.1f; // Only step when moving on ground
-        if (grounded && isMoving && !isSprinting)
+        
+        bool isMoving = grounded && rb.linearVelocity.magnitude > 0.1f;
+
+        if (!isMoving)
         {
-            if (!isPlayingStep)
-            {
-                StartCoroutine(PlayStep(audStep, walkStepInterval));
-            }
-        }
-        else if (grounded && isMoving && sprinting)
-        {
-            if (!isPlayingStep)
-            {
-                StartCoroutine(PlayStep(audStep, sprintStepInterval));
-            }
+            isPlayingStep = false;
+            return;
         }
 
+        if (state == MovementState.walking && isMoving)
+        {
+            StartCoroutine(PlayStep(audStep, walkStepInterval));
+        }
+        else if (state == MovementState.sprinting && isMoving)
+        {
+            StartCoroutine(PlayStep(audStep, sprintStepInterval));
+        }
     }
 
-    private IEnumerator PlayStep(AudioClip[] clips, float interval)
+
+    private IEnumerator PlayStep(List<AudioClip> clips, float interval)
     {
         isPlayingStep = true;
 
         // Play a random step sound
-        if (clips != null && clips.Length > 0)
-            aud.PlayOneShot(audStep[Random.Range(0, audStep.Length)], audStepVol);
+        if (clips != null && clips.Count > 0)
+        { 
+            aud.PlayOneShot(audStep[Random.Range(0, audStep.Count)], audStepVol);
+            yield return new WaitForSeconds(interval);
+        }
 
-        yield return new WaitForSeconds(interval);
 
         isPlayingStep = false;
     }
@@ -380,7 +380,10 @@ public class AdvancedMovement : MonoBehaviour
         }
 
         else if (grounded)
+        { 
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+            HandleSteps();
+        }
 
         else if (!grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
@@ -456,9 +459,9 @@ public class AdvancedMovement : MonoBehaviour
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
 
-        if (audJump.Length > 0)
+        if (audJump.Count > 0)
         {
-            aud.PlayOneShot(audJump[Random.Range(0, audJump.Length)], audJumpVol);
+            aud.PlayOneShot(audJump[Random.Range(0, audJump.Count)], audJumpVol);
         }
     }
     private void ResetJump()
