@@ -39,7 +39,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
     float shootTimer;
 
     [SerializeField] int HP;
-    public float AttackRange = 2.0f;
+    public float AttackRange;
     public float AttackCooldown = 1.5f;
     [SerializeField] Renderer model;
     private float LastAttackTime;
@@ -76,6 +76,11 @@ public class EnemyGuard : MonoBehaviour, iDamage
     {
         GameManager.instance.UpdateEnemyCount(1);
 
+        if (!InitializePatrolPoints())
+        {
+            Debug.LogWarning($"{name}: was unable to initialize patrol points list");
+        }
+
         InitializePatrolPoints();
         
         FindPlayer();
@@ -106,16 +111,17 @@ public class EnemyGuard : MonoBehaviour, iDamage
             case AIState.Patrol:
                 UpdatePatrol();
                 CheckForMissingPatrols();
-                TryDetectPlayer();
+                CheckForMissingPatrols();
                 break;
 
             case AIState.Investigate:
-                TryDetectPlayer();
+                UpdateInvestigate();
+                if (TryDetectPlayer())
+                    AttackPlayer();
                 break;
 
             case AIState.SearchForMissing:
                 UpdateSearchForMissing();
-                TryDetectPlayer();
                 break;
 
             case AIState.HighAlert:
@@ -126,47 +132,59 @@ public class EnemyGuard : MonoBehaviour, iDamage
 
     bool InitializePatrolPoints()
     {
+        patrolWaypoints.Clear();
+
+        if (GameManager.instance == null || GameManager.instance.patrolWaypoints == null)
+        {
+            return false;
+        }
+
         foreach (GameObject patrolPoint in GameManager.instance.patrolWaypoints)
         {
             if (patrolPoint != null)
             {
                 patrolWaypoints.Add(patrolPoint);
             }
-            else if (patrolPoint == null)
-            {
-                Debug.LogWarning("${name}: was unable to initialize patrol points list on EnemyGuard.cs");
-                return false;
-            }
 
-            return true;
         }
 
-        return false;
+        return patrolWaypoints.Count > 0;
     }
 
 
     void FindPlayer()
-    { 
-        if (GameManager.instance.player != null)
+    {
+        if (GameManager.instance.player != null && GameManager.instance.player != null)
+        {
             PlayerTransform = GameManager.instance.player.transform;
+            return;
+        }
+
+        GameObject playerObj = GameObject.FindWithTag("Player");
+        if (playerObj != null)
+        { 
+            PlayerTransform = playerObj.transform;
+        }
     }
 
 
-    void TryDetectPlayer()
+    bool TryDetectPlayer()
     {
         if (PlayerTransform == null)
         {
-            return;
+            return false;
         }
 
         float distance = Vector3.Distance(transform.position, PlayerTransform.position);
 
-        if (distance <= detectionRange)
+        if (distance <= detectionRange && currentState == AIState.HighAlert)
         {
-            currentState = AIState.HighAlert;
             hasLastKnownTargetPosition = true;
             lastKnownTargetPosition = PlayerTransform.position;
+            return true;
         }
+        else
+            return false;
     }
 
     public GunStats GetGunStats()
@@ -184,6 +202,8 @@ public class EnemyGuard : MonoBehaviour, iDamage
         if (repeatedCount < 3)
         {
             distractionHistory.Add(location);
+            hasLastKnownTargetPosition = true;
+            currentState = AIState.Investigate;
             StopAllCoroutines();
             StartCoroutine(InvestigateLocation(location));
         }
@@ -202,7 +222,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
             currentState = AIState.HighAlert;
             hasLastKnownTargetPosition = true;
             lastKnownTargetPosition = body.transform.position;
-            RadioAllies("Man down! There's a body at " + body.transform.position);
+            RadioAllies("Man down at- ", body.transform.position);
         }
     }
 
@@ -229,19 +249,20 @@ public class EnemyGuard : MonoBehaviour, iDamage
             currentState = AIState.SearchForMissing;
             hasLastKnownTargetPosition = true;
             lastKnownTargetPosition = transform.position;
-            RadioAllies("There's a post not reporting in. I'm checking it out.");
+            RadioAllies("There's a post not reporting in. I'm checking it out.", transform.position);
         }
     }
 
     void UpdateSearchForMissing()
     {
         agent.speed = patrolSpeed;
+        agent.isStopped = false;
 
         if (hasLastKnownTargetPosition)
         {
             agent.SetDestination(lastKnownTargetPosition);
 
-            if (!agent.pathPending && agent.remainingDistance < patrolStopDistance)
+            if (!agent.pathPending && agent.remainingDistance <= patrolStopDistance)
             {
                 hasLastKnownTargetPosition = false;
                 currentState = AIState.Patrol;
@@ -274,7 +295,6 @@ public class EnemyGuard : MonoBehaviour, iDamage
         if (distance > detectionRange * 1.5f)
         {
             currentState = AIState.Investigate;
-            agent.SetDestination(lastKnownTargetPosition);
             return;
         }
 
@@ -283,7 +303,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
 
         if (distance <= AttackRange && Time.time >= LastAttackTime + AttackCooldown)
         {
-            Attack();
+            AttackPlayer();
             LastAttackTime = Time.time;
         }
     }
@@ -333,7 +353,39 @@ public class EnemyGuard : MonoBehaviour, iDamage
         currentState = AIState.Patrol;
     }
 
-    public void RadioAllies(string message)
+    void UpdateInvestigate()
+    { 
+        agent.speed = patrolSpeed;
+        agent.isStopped = false;
+
+        if (!hasLastKnownTargetPosition)
+        {
+            currentState = AIState.Patrol;
+            return;
+        }
+
+
+        if (!agent.pathPending && agent.remainingDistance <= patrolStopDistance)
+        {
+            hasLastKnownTargetPosition = false;
+            StartCoroutine(InvestigateLocation(lastKnownTargetPosition));
+        }
+
+        
+    }
+
+    public void OnSeePlayer(Transform player)
+    {
+        if (isDead || player == null)
+            return;
+
+        PlayerTransform = player;
+        currentState = AIState.HighAlert;
+        hasLastKnownTargetPosition = true;
+        lastKnownTargetPosition = player.position;
+    }
+
+    public void RadioAllies(string message, Vector3 alertPos)
     {
         Debug.Log($"[RADIO] {message}");
         foreach (EnemyGuard guard in allGuards)
@@ -341,7 +393,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
             if (guard != null && guard != this && !guard.isDead)
             {
                 // Alert nearby guards to the same location
-                guard.ReceiveRadioAlert(transform.position);
+                guard.ReceiveRadioAlert(alertPos);
             }
         }
     }
@@ -365,6 +417,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
         if (PlayerTransform == null)
         {
             PlayerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        }
 
             float distance = Vector3.Distance(transform.position, PlayerTransform.position);
 
@@ -382,7 +435,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
                     LastAttackTime = Time.time;
                 }
             }
-        }
+        
     }
 
     void Shoot()

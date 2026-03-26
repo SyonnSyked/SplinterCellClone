@@ -46,11 +46,13 @@ public class GuardVision : MonoBehaviour
 
     void IdentifyTarget(GameObject obj)
     {
+        if (AIController == null)
+            return;
+
         if (obj.CompareTag("Player"))
         {
-            AIController.currentState = AIState.HighAlert;
-            AIController.RadioAllies("Intruder spotted!");
-            AIController.RadioAllies("I've got eyes on the intruder");
+            AIController.OnSeePlayer(obj.transform);
+            AIController.RadioAllies("Intruder spotted!", obj.transform.position);
         }
         else if (obj.CompareTag("Body"))
         {
