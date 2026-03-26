@@ -16,6 +16,9 @@ public class SecurityCameraDetection : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             warningBanner.SetActive(true);
+
+            //AlertCounter.instance.AddAlert();
+
             StartCoroutine(FlashScreen());
         }
     }

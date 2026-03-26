@@ -1,16 +1,19 @@
-using UnityEngine;
+//using UnityEngine;
 
-public class NewMonoBehaviourScript : MonoBehaviour
-{
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+//public class AlertCounter : MonoBehaviour
+//{
+//    public static AlertCounter instance;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-}
+//    public int alertCount = 0;
+
+//    void Awake()
+//    {
+//        instance = this;
+//    }
+
+//    public void AddAlert()
+//    {
+//        alertCount++;
+//        Debug.Log("Alerts: " + alertCount);
+//    }
+//}
