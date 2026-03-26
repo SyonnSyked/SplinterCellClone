@@ -346,6 +346,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a9021069a0bf3a0469881282e90fcc95, type: 3}
   - {fileID: 8300000, guid: 8653425c124a75d42a9d0f9afb4e1926, type: 3}
   audStepVol: 3
+  walkStepInterval: 0.5
+  sprintStepInterval: 0.3
   state: 0
   usingStamina: 0
   sprinting: 0

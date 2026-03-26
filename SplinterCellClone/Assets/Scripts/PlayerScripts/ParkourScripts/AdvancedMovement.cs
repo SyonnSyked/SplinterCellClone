@@ -60,12 +60,20 @@ public class AdvancedMovement : MonoBehaviour
 
     [Header("~~~~~~Audio~~~~~")]
     [SerializeField] AudioSource aud;
+
     [SerializeField] AudioClip[] audJump;
     [SerializeField] float audJumpVol;
+
     [SerializeField] AudioClip[] audHurt;
     [SerializeField] float audHurtVol;
+
     [SerializeField] AudioClip[] audStep;
     [SerializeField] float audStepVol;
+
+    [Header("~~~~~~Step Timing~~~~~")]
+    [SerializeField] float walkStepInterval = 0.5f;
+    [SerializeField] float sprintStepInterval = 0.3f;
+
 
     bool isPlayingStep;
     bool isSprinting;
@@ -140,35 +148,44 @@ public class AdvancedMovement : MonoBehaviour
         HandleStaminaEmpty();
         //TextStuff();
 
+        HandleSteps();
+
         if (grounded)
             rb.linearDamping = groundDrag;
         else
             rb.linearDamping = 0;
 
-        HandleSteps();
-
     }
 
     private void HandleSteps()
     {
-        if (!grounded || moveDirection.magnitude < 0.1f) return; // Only step when moving on ground
-        if (!isPlayingStep)
+        bool isMoving = rb.linearVelocity.magnitude < 0.1f; // Only step when moving on ground
+        if (grounded && isMoving && !isSprinting)
         {
-            StartCoroutine(PlayStep());
+            if (!isPlayingStep)
+            {
+                StartCoroutine(PlayStep(audStep, walkStepInterval));
+            }
         }
+        else if (grounded && isMoving && sprinting)
+        {
+            if (!isPlayingStep)
+            {
+                StartCoroutine(PlayStep(audStep, sprintStepInterval));
+            }
+        }
+
     }
 
-    private IEnumerator PlayStep()
+    private IEnumerator PlayStep(AudioClip[] clips, float interval)
     {
         isPlayingStep = true;
 
         // Play a random step sound
-        if (audStep.Length > 0)
+        if (clips != null && clips.Length > 0)
             aud.PlayOneShot(audStep[Random.Range(0, audStep.Length)], audStepVol);
 
-        // Wait depending on sprinting/walking
-        float waitTime = isSprinting ? 0.5f : 0.3f;
-        yield return new WaitForSeconds(waitTime);
+        yield return new WaitForSeconds(interval);
 
         isPlayingStep = false;
     }
@@ -439,7 +456,10 @@ public class AdvancedMovement : MonoBehaviour
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
 
-        aud.PlayOneShot(audJump[Random.Range(0, audJump.Length)], audJumpVol);
+        if (audJump.Length > 0)
+        {
+            aud.PlayOneShot(audJump[Random.Range(0, audJump.Length)], audJumpVol);
+        }
     }
     private void ResetJump()
     {
@@ -464,9 +484,5 @@ public class AdvancedMovement : MonoBehaviour
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
 
-    public void takeDamage(int amount)
-    {
-        aud.PlayOneShot(audHurt[Random.Range(0, audHurt.Length)], audHurtVol);
-    }
 
 }
