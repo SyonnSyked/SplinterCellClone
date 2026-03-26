@@ -1,11 +1,14 @@
 using UnityEngine;
 
-public class 2 : MonoBehaviour
+public class SecurityCameraDetection : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public GameObject warningBanner;
+    public CanvasGroup redFlash;
+
+    void start()
     {
-        
+        warningBanner.SetActive(false);
+        redFlash.alpha = 0f;
     }
 
     // Update is called once per frame
