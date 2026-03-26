@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class GuardVision : MonoBehaviour
 {
-    [Header("Vision Settings")]
     public float viewDistance = 15f;
     [Range(0, 180)] public float viewAngle = 90f;
-    public LayerMask targetMask; // Set to "Player" and "Body" layers
-    public LayerMask obstructionMask; // Set to "Default/Level" layers
+    public LayerMask targetMask;      // Should be "Player" and "Body"
+    public LayerMask obstructionMask; // Should be "Default" or "Level"
 
     private EnemyGuard AIController;
 
@@ -17,38 +16,40 @@ public class GuardVision : MonoBehaviour
 
     void Update()
     {
+        if (AIController == null || AIController.isDead) return;
         FindVisibleTargets();
     }
 
     void FindVisibleTargets()
     {
-        // Find potential targets in range
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewDistance, targetMask);
 
-        for (int i = 0; i < targetsInViewRadius.Length; i++)
+        foreach (var targetCollider in targetsInViewRadius)
         {
-            Transform target = targetsInViewRadius[i].transform;
+            Transform target = targetCollider.transform;
             Vector3 dirToTarget = (target.position - transform.position).normalized;
 
-            // Check if target is within the FOV angle
             if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
             {
                 float dstToTarget = Vector3.Distance(transform.position, target.position);
 
-                // Raycast to check for wall obstructions
+                // Raycast check
                 if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstructionMask))
                 {
-                    IdentifyTarget(target.gameObject);
+                    // If we hit this line, the guard DEFINITELY sees the object
+                    AIController.OnSeenObject(target.gameObject);
                 }
             }
         }
     }
 
-    void IdentifyTarget(GameObject obj)
+
+
+void IdentifyTarget(GameObject obj)
     {
         if (obj.CompareTag("Body"))
         {
-            AIController.OnSeeBody(obj);
+            AIController.OnSeenObject(obj);
         }
         else if (obj.CompareTag("Player"))
         {

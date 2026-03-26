@@ -16,7 +16,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
     [Header("--- State Management ---")]
     public AIState currentState = AIState.Patrol;
     public Transform[] patrolWaypoints;
-    public float waypointBuffer = 1.5f; // Prevents the "circling" bug
+    public float waypointBuffer = 1.5f; // Prevents "circling" bug
     private int currentWaypointIndex = 0;
     private NavMeshAgent agent;
 
@@ -41,7 +41,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
     private Transform playerTransform;
 
     [Header("--- Buddy System & Memory ---")]
-    public EnemyGuard buddyAI;
+    public EnemyGuard buddyAI; // Add partner here 
     private List<Vector3> distractionHistory = new List<Vector3>();
     private static List<EnemyGuard> allGuards = new List<EnemyGuard>();
 
