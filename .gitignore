@@ -5,9 +5,9 @@
 .utmp/
 [Ll]ibrary/
 [Tt]emp/
-[Oo]bj/
-[Bb]uild/
 [Bb]uilds/
+[Bb]uild/
+[Oo]bj/
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
 *.log
