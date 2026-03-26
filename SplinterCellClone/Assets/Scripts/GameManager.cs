@@ -20,9 +20,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text enemyCountText;
     [SerializeField] TMP_Text intelText;
     [SerializeField] TMP_Text ammoCurr;
-    [SerializeField] TMP_Text ammoMax;
     [SerializeField] TMP_Text ammoReserve;
 
+    public ShootingComponent playerShootingScript;
 
     [SerializeField] public GameObject lightEnemy;
     [SerializeField] public GameObject guardEnemy;
@@ -173,19 +173,6 @@ public class GameManager : MonoBehaviour
        */
     }
 
-    public void updateAmmoMax()
-    {
-        var inventory = player.GetComponent<PlayerInventory>();
-        if (inventory != null && inventory.playerGuns.Count > 0)
-        {
-            var gun = inventory.playerGuns[inventory.gunListPos];
-            ammoMax.text = gun.maxAmmo.ToString();
-        }
-        else
-        {
-            ammoMax.text = "0";
-        }
-    }
 
     public void updateAmmoCurr()
     {
@@ -203,10 +190,9 @@ public class GameManager : MonoBehaviour
 
     public void updateAmmoReserve()
     {
-        var inventory = player.GetComponent<PlayerInventory>();
-        if (inventory != null)
+        if (playerShootingRoot != null)
         {
-           
+            ammoReserve.text = playerShootingRoot.GetComponent<ShootingComponent>().GetReserveAmmoCount().ToString(); 
         }
         else
         {

@@ -29,7 +29,6 @@ public class Damage : MonoBehaviour
     {
         lightEnemyScript = GameManager.instance.lightEnemy.GetComponent<EnemyAI>();
         guardEnemyScript = GameManager.instance.guardEnemy.GetComponent<EnemyGuard>();
-        playerShootingScript = GameManager.instance.playerShootingRoot.GetComponent<ShootingComponent>();
 
         if (dmgType == damageType.bullet)
         {
@@ -43,6 +42,7 @@ public class Damage : MonoBehaviour
                     gunStats = guardEnemyScript.GetGunStats();
                     break;
                 case entityType.player:
+                    playerShootingScript = GameManager.instance.playerShootingScript;
                     gunStats = playerShootingScript.GetGunStats();
                     break;
                 case entityType.environmental:

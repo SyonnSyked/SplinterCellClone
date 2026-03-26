@@ -43,7 +43,7 @@ public class EnemyTurret : MonoBehaviour
     {
         if (playerInTrigger && !CanSeePlayer())
             return;
-        if (!playerInTrigger && !CanSeePlayer())
+        if (!playerInTrigger)
             return;
 
         if (playerInTrigger)

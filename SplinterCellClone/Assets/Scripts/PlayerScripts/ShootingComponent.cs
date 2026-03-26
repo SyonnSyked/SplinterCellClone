@@ -20,6 +20,8 @@ public class ShootingComponent : MonoBehaviour
     [SerializeField] Transform shootPos;
     [SerializeField] Transform gunPivot;
 
+    int reserveAmmo;
+
     [Header("----CameraData----")]
     [SerializeField] Transform cameraPosition;
 
@@ -38,8 +40,8 @@ public class ShootingComponent : MonoBehaviour
     void Start()
     {
         playerInventory.gunListPos = 0;
+        ChangeGun();
         GameManager.instance.updateAmmoCurr();
-        GameManager.instance.updateAmmoMax();
         GameManager.instance.updateAmmoReserve();
     }
 
@@ -76,6 +78,25 @@ public class ShootingComponent : MonoBehaviour
         }
     }
 
+    public int GetReserveAmmoCount()
+    {
+        switch (equippedGun.ammoType)
+        {
+            case AmmoStats.AmmoType.light:
+                reserveAmmo = playerInventory.GetSmallAmmoCount();
+                break;
+            case AmmoStats.AmmoType.medium:
+                reserveAmmo = playerInventory.GetMediumAmmoCount();
+                break;
+            case AmmoStats.AmmoType.heavy:
+                reserveAmmo = playerInventory.GetHeavyAmmoCount();
+                break;
+        }
+
+        return reserveAmmo;
+    }
+
+
     public GunStats GetGunStats()
     {
         return equippedGun;
@@ -100,7 +121,6 @@ public class ShootingComponent : MonoBehaviour
         shootDistance = equippedGun.range;
         isAutomatic = equippedGun.isAutomatic;
 
-        GameManager.instance.updateAmmoMax();
         GameManager.instance.updateAmmoReserve();
         GameManager.instance.updateAmmoCurr();
 
