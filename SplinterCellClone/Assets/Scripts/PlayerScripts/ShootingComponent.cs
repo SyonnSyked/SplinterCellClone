@@ -1,6 +1,7 @@
 using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class ShootingComponent : MonoBehaviour 
@@ -27,6 +28,8 @@ public class ShootingComponent : MonoBehaviour
 
     [Header("----Audio----")]
     [SerializeField] AudioSource audioPlayer;
+    [SerializeField] List<AudioClip> shootClips = new List<AudioClip>();
+    [SerializeField] float audioShotVol;
 
     float shootTimer;
 
@@ -34,6 +37,7 @@ public class ShootingComponent : MonoBehaviour
 
     bool isAutomatic;
 
+    bool isPlayingShooting;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -43,6 +47,7 @@ public class ShootingComponent : MonoBehaviour
         ChangeGun();
         GameManager.instance.updateAmmoCurr();
         GameManager.instance.updateAmmoReserve();
+        InitializeGunSounds();
     }
 
     // Update is called once per frame
@@ -78,6 +83,14 @@ public class ShootingComponent : MonoBehaviour
         }
     }
 
+    private void InitializeGunSounds()
+    {
+        foreach (AudioClip clip in equippedGun.audioClips)
+        {
+            shootClips.Add(clip);
+        }
+    }
+
     public int GetReserveAmmoCount()
     {
         switch (equippedGun.ammoType)
@@ -103,15 +116,27 @@ public class ShootingComponent : MonoBehaviour
     }
     void Shoot()
     {
+        StartCoroutine(PlayShootSound(shootClips, shootTimer));
+
         shootTimer = 0;
         Instantiate(bullet, shootPos.position, gunPivot.transform.rotation);
         equippedGun.currentAmmo--;
         GameManager.instance.updateAmmoCurr();
-
-        //audioPlayer.PlayOneShot();
     }
 
 
+    private IEnumerator PlayShootSound(List<AudioClip> clips, float interval)
+    {
+        isPlayingShooting = true;
+
+        // Play a random step sound
+        if (clips != null && clips.Count > 0)
+            audioPlayer.PlayOneShot(shootClips[Random.Range(0, shootClips.Count)], audioShotVol);
+
+        yield return new WaitForSeconds(interval);
+
+        isPlayingShooting = false;
+    }
 
     void ChangeGun()
     {
