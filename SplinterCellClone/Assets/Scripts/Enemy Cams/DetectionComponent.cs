@@ -11,9 +11,27 @@ public class SecurityCameraDetection : MonoBehaviour
         redFlash.alpha = 0f;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.CompareTag("Player"))
+        {
+            warningBanner.SetActive(true);
+            StartCoroutine(FlashScreen());
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            warningBanner.SetActive(false);
+        }
+    }
+
+    System.Collections.IEnumerator FlashScreen()
+    {
+        redFlash.alpha = 1f;
+        yield return new WaitForSeconds(0.2f);
+        redFlash.alpha = 0f;
     }
 }
