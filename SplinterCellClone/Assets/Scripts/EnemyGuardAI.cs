@@ -27,7 +27,7 @@ public class EnemyGuard : MonoBehaviour, iDamage
     private Coroutine dialogueCoroutine;
     private string lastSaidMessage = ""; // Prevents text flickering/spam
 
-    [Header("--- Combat (Procedural Staff) ---")]
+    [Header("--- Combat (Staff) ---")]
     public Transform staffPivot;
     public int staffDamage = 20;
     public float attackRange = 2.5f;
